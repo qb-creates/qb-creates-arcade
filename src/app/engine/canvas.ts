@@ -60,58 +60,31 @@ export class Canvas {
      * @param {number} canvasHeight - Height of the canvas in pixels.
      * @param {number} ppu - Pixels Per Unit.
      */
-    static configureCanvas(canvasWidth, canvasHeight, ppu) {
-        Canvas._ppu = ppu;
-        Canvas._canvas = document.createElement('canvas');
-        Canvas._canvas.style = `border: 0px solid white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);`;
+    public static configureCanvas(canvasWidth, canvasHeight, ppu) {
+        Canvas.ppu = ppu;
         Canvas._canvas.width = canvasWidth;
         Canvas._canvas.height = canvasHeight;
-        Canvas._context = Canvas._canvas.getContext('2d');
 
         // Flips the Y axis. Makes it so that positive y values move north on the grid and negative values move south.
         Canvas._context.transform(1, 0, 0, -1, 0, canvasHeight);
 
         // Makes it so that (0, 0) is the center of our canvas
         Canvas._context.translate(canvasWidth / 2, canvasHeight / 2);
-
-        // Will be used to track our mouse position on the canvas.
-        Canvas._canvas.addEventListener("mousemove", function (evt) {
-            let rect = Canvas._canvas.getBoundingClientRect();
-
-            // Find mouse X and Y coordinates on the canvas by subtracting the mouse's global 
-            // X and Y coordinates from the left and top location of the canvas.
-            let x = (evt.clientX - rect.left);
-            let y = (evt.clientY - rect.top);
-
-            // Center the x coordinate in the screen by subtracting half of the canvas width from the x coordinate.
-            x = (x - (Canvas.canvasWidth / 2)) / Canvas.ppu;
-
-            // Center the y coordinate in the screen by subtracting half of the canvas height from the y coordinate.
-            // Flip the y value direction by multiplying by -1.
-            y = -1 * (y - (Canvas.canvasHeight / 2)) / Canvas.ppu;
-
-            Canvas._mousePosition = new Vector2(x, y);
-        }, false);
-
-        document.body.appendChild(Canvas._canvas);
-        requestAnimationFrame(Canvas.updateCanvas);
     }
 
     /**
      * Adds a gameobject to the list of objects that need to be rendered.
      * @param {GameObject} gameObject - The object the needs to be rendered.
      */
-    static addGameObject(gameObject: GameObject) {
-        console.log();
+    public static addGameObject(gameObject: GameObject) {
         Canvas._gameObjectList.push(gameObject);
-        console.log();
     }
 
     /**
      * Will add the collider to the list of colliders that that are periodically compared against for collision detection.
      * @param {BoxCollider} collider - The collider that needs to be added to the collider list. 
      */
-    static addCollider(collider) {
+    public static addCollider(collider) {
         Canvas._colliderList.push(collider);
     }
 
@@ -119,7 +92,7 @@ export class Canvas {
      * Removes a gameObject from the list of objects that need to be rendered
      * @param {GameObject} gameObject - The object that needs to be removed.
      */
-    static removeGameObject(gameObject) {
+    public static removeGameObject(gameObject) {
         gameObject.getComponents(BoxCollider).forEach(collider => {
             let colliderIndex = Canvas._colliderList.indexOf(collider);
 
@@ -211,4 +184,33 @@ export class Canvas {
             //}
         });
     }
+    
+    // Acts as a private static constructor 
+    private static __ctor = (() => {
+        Canvas._canvas = document.createElement('canvas');
+        Canvas._canvas.style = `border: 0px solid white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);`;
+        Canvas._context = Canvas._canvas.getContext('2d');
+
+        // Will be used to track our mouse position on the canvas.
+        Canvas._canvas.addEventListener("mousemove", function (evt) {
+            let rect = Canvas._canvas.getBoundingClientRect();
+
+            // Find mouse X and Y coordinates on the canvas by subtracting the mouse's global 
+            // X and Y coordinates from the left and top location of the canvas.
+            let x = (evt.clientX - rect.left);
+            let y = (evt.clientY - rect.top);
+
+            // Center the x coordinate in the screen by subtracting half of the canvas width from the x coordinate.
+            x = (x - (Canvas.canvasWidth / 2)) / Canvas.ppu;
+
+            // Center the y coordinate in the screen by subtracting half of the canvas height from the y coordinate.
+            // Flip the y value direction by multiplying by -1.
+            y = -1 * (y - (Canvas.canvasHeight / 2)) / Canvas.ppu;
+
+            Canvas._mousePosition = new Vector2(x, y);
+        }, false);
+
+        document.body.appendChild(Canvas._canvas);
+        requestAnimationFrame(Canvas.updateCanvas);
+    })();
 }

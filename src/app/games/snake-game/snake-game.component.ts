@@ -14,7 +14,6 @@ export class SnakeGameComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    Input.initialize();
     Canvas.configureCanvas(500, 500, 25);
     QObject.instantiatePrefabObject(prefab.background);
     QObject.instantiatePrefabObject(prefab.apple);

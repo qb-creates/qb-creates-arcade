@@ -64,7 +64,6 @@ export class TestFollow extends MonoBehaviour {
             this.animationcount = 0;
         }
         
-        // console.log(`${this.gameObject.objectName}     ${this.target}`);
         if (this.target) {
             let step = this.speed * Time.deltaTime;
             let myTarg = this.target.children[this.target.children.length - 1];
@@ -86,6 +85,5 @@ export class TestFollow extends MonoBehaviour {
     }
 
     onTriggerExit(colliders) {
-        // console.log('exit', colliders)
     }
 }

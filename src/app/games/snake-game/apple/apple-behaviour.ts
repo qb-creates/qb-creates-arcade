@@ -31,7 +31,6 @@ export class AppleBehaviour extends MonoBehaviour {
     }
 
     update() {
-        // console.log(this.gameObject.objectName, "    ", this.gameObject.getComponent(BoxCollider))
     }
 
     onTriggerEnter(colliders) {

@@ -21,9 +21,6 @@ export class MonoBehaviour extends Component {
 
 
             this._canvasUpdateSubscription = Canvas.canvasUpdate.subscribe(isStarted => {
-                if (this.gameObject.objectName.includes('apple')) {
-                    console.log(this.gameObject.objectName)
-                }
                 if (!this.gameObject.isDestroyed) {
                   
                     this.CheckForDestroyedReferences();

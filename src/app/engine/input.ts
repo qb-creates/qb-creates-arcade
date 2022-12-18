@@ -37,28 +37,6 @@ export class Input {
         }
     }
 
-    static initialize() {
-        addEventListener('keydown', (event) => {
-            if (event.repeat) {
-                return;
-            }
-            
-            if (this._KeyDown.hasOwnProperty(event.key)) {
-                this._KeyDown[event.key].keyUp = false;
-                this._KeyDown[event.key].keyDown = true;
-                this._KeyDown[event.key].key = true;
-            }
-        });
-
-        addEventListener('keyup', (event) => {
-            if (this._KeyDown.hasOwnProperty(event.key)) {
-                this._KeyDown[event.key].keyDown = false;
-                this._KeyDown[event.key].keyUp = true;
-                this._KeyDown[event.key].key = false;
-            }
-        });
-    }
-
     static getKeyDown(keyCode) {
         if (this._KeyDown[keyCode].keyDown) {
             this._KeyDown[keyCode].keyDown = false;
@@ -78,6 +56,29 @@ export class Input {
     static getKey(keyCode) {
         return this._KeyDown[keyCode].key;
     }
+
+    // Acts as a private static constructor 
+    private static __ctor = (() => {
+        addEventListener('keydown', (event) => {
+            if (event.repeat) {
+                return;
+            }
+            
+            if (Input._KeyDown.hasOwnProperty(event.key)) {
+                Input._KeyDown[event.key].keyUp = false;
+                Input._KeyDown[event.key].keyDown = true;
+                Input._KeyDown[event.key].key = true;
+            }
+        });
+
+        addEventListener('keyup', (event) => {
+            if (Input._KeyDown.hasOwnProperty(event.key)) {
+                Input._KeyDown[event.key].keyDown = false;
+                Input._KeyDown[event.key].keyUp = true;
+                Input._KeyDown[event.key].key = false;
+            }
+        });
+    })();
 }
 
 export const KeyCode = {

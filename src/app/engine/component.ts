@@ -25,7 +25,7 @@ export class Component extends QObject {
         this._transform = value;
     }
 
-    constructor(gameObject) {
+    constructor(gameObject: GameObject) {
         super();
         this._gameObject = gameObject;
         this._transform = gameObject.transform;
