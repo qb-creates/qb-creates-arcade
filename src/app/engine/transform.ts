@@ -1,14 +1,14 @@
-import { Vector2, Component, BoxCollider } from "./qbcreates-js-engine";
+import { Vector2, Component, BoxCollider, GameObject } from "./qbcreates-js-engine";
 
 export class Transform extends Component {
-    private _position = new Vector2(0, 0);
-    private _scale = new Vector2(1, 1);
+    private _position: Vector2 = new Vector2(0, 0);
+    private _scale: Vector2 = new Vector2(1, 1);
 
     get position() {
         return this._position;
     }
 
-    set position(value) {
+    set position(value: Vector2) {
         // Calculates the change in position and applies the difference to all attached colliders and children.
         let distanceMoved = Vector2.subtract(value, this._position);
 
@@ -26,7 +26,7 @@ export class Transform extends Component {
         return this._scale;
     }
 
-    set scale(value) {
+    set scale(value: Vector2) {
         // Calculates the change in scale and applies the difference to all attached colliders and children.
         let scaleDifference = Vector2.subtract(value, this._scale);
 
@@ -40,7 +40,7 @@ export class Transform extends Component {
         this._scale = value;
     }
 
-    constructor(gameObject) {
+    constructor(gameObject: GameObject) {
         super(gameObject);
     }
 }

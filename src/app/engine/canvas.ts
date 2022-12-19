@@ -7,20 +7,21 @@ import { Subject } from "rxjs";
 import { GameObject } from "./game-object";
 
 export class Canvas {
-    public static canvasUpdate = new Subject<boolean>();
+    public static canvasUpdate: Subject<boolean> = new Subject<boolean>();
     private static _canvas = null;
     private static _context = null;
-    private static _ppu = 25;
-    private static _previousTimestamp = 0;
+    private static _ppu: number = 25;
+    private static _previousTimestamp: number = 0;
     private static _gameObjectList: GameObject[] = [];
-    private static _colliderList = [];
+    private static _colliderList: BoxCollider[] = [];
     private static _mousePosition = new Vector2(0, 0);
+    protected static deltaTime: number = 0;
 
     static get canvasWidth() {
         return Canvas._canvas.width;
     }
 
-    static set canvasWidth(value) {
+    static set canvasWidth(value: number) {
         Canvas._canvas.width = value;
     }
 
@@ -28,7 +29,7 @@ export class Canvas {
         return Canvas._canvas.height;
     }
 
-    static set canvasHeight(value) {
+    static set canvasHeight(value: number) {
         Canvas._canvas.height = value;
     }
 
@@ -36,7 +37,7 @@ export class Canvas {
         return Canvas._ppu;
     }
 
-    static set ppu(value) {
+    static set ppu(value: number) {
         Canvas._ppu = value;
     }
 
@@ -60,7 +61,7 @@ export class Canvas {
      * @param {number} canvasHeight - Height of the canvas in pixels.
      * @param {number} ppu - Pixels Per Unit.
      */
-    public static configureCanvas(canvasWidth, canvasHeight, ppu) {
+    public static configureCanvas(canvasWidth: number, canvasHeight: number, ppu: number) {
         Canvas.ppu = ppu;
         Canvas._canvas.width = canvasWidth;
         Canvas._canvas.height = canvasHeight;
@@ -84,7 +85,7 @@ export class Canvas {
      * Will add the collider to the list of colliders that that are periodically compared against for collision detection.
      * @param {BoxCollider} collider - The collider that needs to be added to the collider list. 
      */
-    public static addCollider(collider) {
+    public static addCollider(collider: BoxCollider) {
         Canvas._colliderList.push(collider);
     }
 
@@ -92,7 +93,7 @@ export class Canvas {
      * Removes a gameObject from the list of objects that need to be rendered
      * @param {GameObject} gameObject - The object that needs to be removed.
      */
-    public static removeGameObject(gameObject) {
+    public static removeGameObject(gameObject: GameObject) {
         gameObject.getComponents(BoxCollider).forEach(collider => {
             let colliderIndex = Canvas._colliderList.indexOf(collider);
 
@@ -116,11 +117,10 @@ export class Canvas {
 
     private static updateCanvas = (timestamp) => {
         Canvas._context.clearRect(-Canvas._canvas.width / 2, -Canvas._canvas.height / 2, Canvas._canvas.width, Canvas._canvas.height);
-        Canvas.renderSprites(Canvas._gameObjectList);
+        Canvas.renderSprites();
         Canvas.collisionCheck();
         Canvas.drawGrid();
-        // TODO set Time.delta dime equal to timestamp - previousTimestamp
-        // console.log(timestamp - Canvas._previousTimestamp);
+        Canvas.deltaTime = (timestamp - Canvas._previousTimestamp);
         Canvas._previousTimestamp = timestamp;
         Canvas.canvasUpdate.next();
         requestAnimationFrame(Canvas.updateCanvas);
@@ -141,17 +141,17 @@ export class Canvas {
         //}
     }
 
-    private static renderSprites(gameObjects) {
+    private static renderSprites() {
 
         // Sort the items by layer value.
-        gameObjects.sort((gameObjectA, gameObjectB) => {
+        Canvas._gameObjectList.sort((gameObjectA, gameObjectB) => {
             return gameObjectA.layer - gameObjectB.layer;
         });
-        
-        // Render Sprites
-        gameObjects.forEach((gameObject) => {
-            let renderer = gameObject.getComponent(SpriteRenderer);
 
+        // Render Sprites
+        Canvas._gameObjectList.forEach((gameObject) => {
+            let renderer = gameObject.getComponent(SpriteRenderer);
+            
             if (renderer) {
                 renderer.sprite(renderer);
             }
@@ -184,7 +184,7 @@ export class Canvas {
             //}
         });
     }
-    
+
     // Acts as a private static constructor 
     private static __ctor = (() => {
         Canvas._canvas = document.createElement('canvas');

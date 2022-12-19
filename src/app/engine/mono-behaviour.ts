@@ -1,20 +1,20 @@
-import { Time, Component, Canvas, GameObject } from "./qbcreates-js-engine";
+import { Subscription } from "rxjs";
+import { Time, Component, Canvas, GameObject, BoxCollider } from "./qbcreates-js-engine";
 
 export class MonoBehaviour extends Component {
-    private _fixedUpdateInterval = null;
-    private _canvasUpdateSubscription = null;
+    private _fixedUpdateInterval: ReturnType<typeof setTimeout> = null;
+    private _canvasUpdateSubscription: Subscription = null;
 
-    constructor(gameObject) {
+    constructor(gameObject: GameObject) {
         super(gameObject);
 
         setTimeout(() => {
             this.awake();
             this.start();
 
-         
             this._fixedUpdateInterval = setInterval(() => {
                 if (this.gameObject.isActive) {
-                  
+
                     this.fixedUpdate();
                 }
             }, Time.fixedDeltaTime * 1000);
@@ -22,7 +22,7 @@ export class MonoBehaviour extends Component {
 
             this._canvasUpdateSubscription = Canvas.canvasUpdate.subscribe(isStarted => {
                 if (!this.gameObject.isDestroyed) {
-                  
+
                     this.CheckForDestroyedReferences();
                     this.update();
                 }
@@ -47,10 +47,10 @@ export class MonoBehaviour extends Component {
     fixedUpdate() {
     }
 
-    onTriggerEnter(colliders) {
+    onTriggerEnter(colliders: BoxCollider[]) {
     }
 
-    onTriggerExit(colliders) {
+    onTriggerExit(colliders: BoxCollider[]) {
     }
 
     private CheckForDestroyedReferences() {
@@ -62,7 +62,7 @@ export class MonoBehaviour extends Component {
 
             if (value instanceof GameObject && value.isDestroyed) {
                 if (!key.includes('_'))
-                Reflect.set(this, key, null)
+                    Reflect.set(this, key, null)
             }
         })
     }

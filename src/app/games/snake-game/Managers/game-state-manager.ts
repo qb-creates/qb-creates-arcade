@@ -1,8 +1,8 @@
 import { Subject } from "rxjs";
 
 export class GameStateManager {
-    private static _gameStateEvent = new Subject<boolean>();
-    private static _isStarted:boolean = false;
+    private static _gameStateEvent: Subject<boolean> = new Subject<boolean>();
+    private static _isStarted: boolean = false;
 
     static get gameStateEvent() {
         return this._gameStateEvent;

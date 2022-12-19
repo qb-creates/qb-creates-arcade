@@ -1,5 +1,5 @@
 export class ScoreManager {
-    private static _score = 0;
+    private static _score: number = 0;
 
     static addPoint() {
         this._score++;

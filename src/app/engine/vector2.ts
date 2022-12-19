@@ -1,12 +1,12 @@
 export class Vector2 {
-    private _x = 0;
-    private _y = 0;
+    private _x: number = 0;
+    private _y: number = 0;
 
     get x() {
         return this._x;
     }
 
-    set x(value) {
+    set x(value: number) {
         this._x = value;
     }
 
@@ -14,7 +14,7 @@ export class Vector2 {
         return this._y;
     }
 
-    set y(value) {
+    set y(value: number) {
         this._y = value;
     }
 
@@ -37,11 +37,11 @@ export class Vector2 {
     static get right() {
         return new Vector2(1, 0);
     }
-    constructor(x, y) {
+    constructor(x: number, y: number) {
         this._x = x;
         this._y = y;
     }
-    
+
     /**
      * Nomalizes the vector where its magnitude is equal to 1 unit.
      * @returns {Vector2} - Return the normalized Vector
@@ -62,7 +62,7 @@ export class Vector2 {
      * @param {Vector2} vectorB 
      * @returns {Vector2} - Returns the sum of the two Vectors.
      */
-    static add(vectorA, vectorB) {
+    static add(vectorA: Vector2, vectorB: Vector2) {
         let x = vectorA.x + vectorB.x;
         let y = vectorA.y + vectorB.y;
 
@@ -75,7 +75,7 @@ export class Vector2 {
      * @param {Vector2} vectorB 
      * @returns {Vector2} - Returns the difference of the two Vectors.
      */
-    static subtract(vectorA, vectorB) {
+    static subtract(vectorA: Vector2, vectorB: Vector2) {
         let x = vectorA.x - vectorB.x;
         let y = vectorA.y - vectorB.y;
 
@@ -88,7 +88,7 @@ export class Vector2 {
      * @param {number} num 
      * @returns Returns the product as a Vector2.
      */
-    static multiply(vectorA, num) {
+    static multiply(vectorA: Vector2, num: number) {
         return new Vector2(vectorA.x * num, vectorA.y * num);
     }
 }

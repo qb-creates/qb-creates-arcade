@@ -1,20 +1,20 @@
 import { Canvas, Component, Transform, SpriteRenderer, Vector2, BoxCollider, QObject } from "./qbcreates-js-engine";
 
 export class GameObject extends QObject {
-    public parent = null;
-    private _objectName = '';
+    public parent: GameObject = null;
+    private _objectName: string = '';
     private _scriptList = [];
-    private _children = [];
-    private _isDestroyed = false;
-    private _transform = null;
-    private _layer = 0;
-    private _isActive = true;
-    
+    private _children: GameObject[] = [];
+    private _isDestroyed: boolean = false;
+    private _transform: Transform = null;
+    private _layer: number = 0;
+    private _isActive: boolean = true;
+
     get objectName() {
         return this._objectName;
     }
 
-    set objectName(value) {
+    set objectName(value: string) {
         this._objectName = value;
     }
 
@@ -22,7 +22,7 @@ export class GameObject extends QObject {
         return this._layer;
     }
 
-    set layer(value) {
+    set layer(value: number) {
         this._layer = value;
     }
 
@@ -30,7 +30,7 @@ export class GameObject extends QObject {
         return this._isActive;
     }
 
-    set isActive(value) {
+    set isActive(value: boolean) {
         this._isActive = value;
     }
 
@@ -38,21 +38,19 @@ export class GameObject extends QObject {
         return this._isDestroyed;
     }
 
-    set isDestroyed(value) {
+    set isDestroyed(value: boolean) {
         this._isDestroyed = value;
     }
 
     get children() {
         return this._children;
     }
-    set children(value) {
-        this._children = value;
-    }
+
     get transform() {
         return this._transform;
     }
 
-    constructor(objectName) {
+    constructor(objectName: string) {
         super();
         this._objectName = objectName;
         this._transform = new Transform(this)
@@ -70,7 +68,7 @@ export class GameObject extends QObject {
      * Adds the input gameObect to this gameObjects list of children.
      * @param {GameObject} gameObject 
      */
-    addGameObject(gameObject) {
+    addGameObject(gameObject: GameObject) {
         gameObject.parent = this;
         gameObject.transform.position = Vector2.add(gameObject.transform.position, this.transform.position);
         this._children.unshift(gameObject);
@@ -82,24 +80,24 @@ export class GameObject extends QObject {
 
     /**
      * Get a specific component from the gameObject. The first one listed will be returned.
-     * @param {*} componentClass 
+     * @param {*} T 
      * @returns The first one listed will be returned. Returns null if the script Type isn't found.
      */
-    getComponent(componentClass) {
+    getComponent(T: typeof Component) {
         if (this._scriptList) {
-            return this._scriptList.find(component => component instanceof componentClass);
+            return this._scriptList.find(component => component instanceof T);
         }
         return null;
     }
 
     /**
      * Get a specific component from the gameObject. A list of all instances will be returned.
-     * @param {*} componentClass - The class name of the component we want to get 
+     * @param {*} T - The class name of the component we want to get 
      * @returns A list of all instances will be returned. Returns null if the script Type isn't found.
      */
-    getComponents(componentClass) {
+    getComponents(T: typeof Component) {
         if (this._scriptList) {
-            return this._scriptList.filter(component => component instanceof componentClass);
+            return this._scriptList.filter(component => component instanceof T);
         }
         return null;
     }
@@ -109,7 +107,7 @@ export class GameObject extends QObject {
      * @param {Component} T - Class type of the component you want to created and add to this gameObject.
      * @returns {Component} Returns the newly created component.
      */
-    addComponent(T) {
+    addComponent(T: typeof Component) {
         if (T === Transform) {
             throw new Error(`Can not add another transform to ${this._objectName}.`);
         }

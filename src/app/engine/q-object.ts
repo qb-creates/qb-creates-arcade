@@ -1,4 +1,4 @@
-import { GameObject, Vector2, Component, Transform, Canvas, MonoBehaviour, SpriteRenderer, BoxCollider } from "./qbcreates-js-engine";
+import { GameObject, Vector2, Component, Transform, Canvas, MonoBehaviour } from "./qbcreates-js-engine";
 import { Guid } from "guid-typescript";
 
 export class QObject {
@@ -29,7 +29,7 @@ export class QObject {
      * @param {Vector2} position - Starting position of the cloned object.
      * @returns 
      */
-    static instantiate(originalGameObject, parent: GameObject = null, position: Vector2 = new Vector2(0, 0)) {
+    static instantiate(originalGameObject: GameObject, parent: GameObject = null, position: Vector2 = new Vector2(0, 0)) {
         // let underscorIndex = originalGameObject.objectName.lastIndexOf('_');
         // let newName = originalGameObject.objectName + '_1';
 
@@ -116,7 +116,7 @@ export class QObject {
      * Removes a gameObject component
      * @param {GameObject} gameObject - The gameObject that will be removed.
      */
-    static destroy(gameObject) {
+    static destroy(gameObject: GameObject) {
         Canvas.removeGameObject(gameObject);
         gameObject.getComponents(MonoBehaviour).forEach(component => {
             component.destroy();

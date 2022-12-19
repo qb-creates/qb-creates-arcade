@@ -33,7 +33,7 @@ export class AppleBehaviour extends MonoBehaviour {
     update() {
     }
 
-    onTriggerEnter(colliders) {
+    onTriggerEnter(colliders: BoxCollider[]) {
         colliders.forEach(collider => {
             if (collider.gameObject.objectName.includes('snake')) {
                 ScoreManager.addPoint();

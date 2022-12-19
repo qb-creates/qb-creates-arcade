@@ -1,24 +1,24 @@
-import { MonoBehaviour, SpriteRenderer, Time, Vector2 } from "../../../engine/qbcreates-js-engine";
+import { MonoBehaviour, SpriteRenderer, Time, Vector2, Canvas } from "../../../engine/qbcreates-js-engine";
 import { GameStateManager } from "../managers/game-state-manager";
 import { SnakeSize, snakeHeadColor, snakeBodyColor } from "./snake-exports";
 
 export class SnakeMovement extends MonoBehaviour {
-    private _play = false;
-    private _snakeSize = null;
-    private _verticalAxis = 0;
-    private _horizontalAxis = 1;
-    private _movePlayerTimer = 0;
-    private _currentDirection = new Vector2(0, 1);
+    private _play: boolean = false;
+    private _snakeSize: SnakeSize = null;
+    private _verticalAxis: number = 0;
+    private _horizontalAxis: number = 1;
+    private _movePlayerTimer: number = 0;
+    private _currentDirection: Vector2 = new Vector2(0, 1);
 
     get currentDirection() {
         return this._currentDirection;
     }
 
-    set horizontalAxis(newHorizontalAxis) {
+    set horizontalAxis(newHorizontalAxis: number) {
         this._horizontalAxis = newHorizontalAxis;
     }
 
-    set verticalAxis(newVerticalAxis) {
+    set verticalAxis(newVerticalAxis: number) {
         this._verticalAxis = newVerticalAxis;
     }
 
@@ -35,9 +35,9 @@ export class SnakeMovement extends MonoBehaviour {
 
     update() {
         if (this._play) {
-            this._movePlayerTimer += Time.fixedDeltaTime;
+            this._movePlayerTimer += Time.deltaTime;
 
-            if (this._movePlayerTimer >= .11 && !this._snakeSize.isGrowing) {
+            if (this._movePlayerTimer >= .09 && !this._snakeSize.isGrowing) {
                 let headIndex = this.gameObject.children.length - 1
                 let coordinates = this.gameObject.children[headIndex].transform.position;
                 let headX = coordinates.x + this._horizontalAxis;

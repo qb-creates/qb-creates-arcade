@@ -13,7 +13,7 @@ export class Component extends QObject {
         return this._enabled;
     }
 
-    set enabled(value) {
+    set enabled(value: boolean) {
         this._enabled = value;
     }
 
@@ -21,7 +21,7 @@ export class Component extends QObject {
         return this._transform;
     }
 
-    set transform(value) {
+    set transform(value: Transform) {
         this._transform = value;
     }
 
