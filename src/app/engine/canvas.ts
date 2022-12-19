@@ -228,6 +228,11 @@ export class Canvas {
             Canvas._mousePosition = new Vector2(x, y);
         }, false);
 
+        // Disables the right click menu from appearing.
+        Canvas._canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+          });
+
         document.body.appendChild(Canvas._canvas);
         requestAnimationFrame(Canvas.updateCanvas);
     })();

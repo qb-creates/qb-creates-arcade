@@ -1,4 +1,4 @@
-import { MonoBehaviour, PlayerInput, KeyCode, Canvas, BoxCollider } from "../../../engine/qbcreates-js-engine";
+import { MonoBehaviour, PlayerInput, KeyCode, Canvas, BoxCollider, QObject } from "../../../engine/qbcreates-js-engine";
 import { GameStateManager } from "../managers/game-state-manager";
 
 export class SnakeCollision extends MonoBehaviour {

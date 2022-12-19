@@ -1,38 +1,48 @@
 export class PlayerInput {
-    static _KeyDown = {
+    private static _KeyDown = {
+        0: {
+            key: false,
+            keyDown: false,
+            keyUp: false
+        },
+        2: {
+            key: false,
+            keyDown: false,
+            keyUp: false
+        },
         a: {
-            key: false, 
-            keyDown: false, 
+            key: false,
+            keyDown: false,
             keyUp: false
         },
-        b:  {
-            key: false, 
-            keyDown: false, 
+        b: {
+            key: false,
+            keyDown: false,
             keyUp: false
         },
-        c:  {
-            key: false, 
-            keyDown: false, 
+        c: {
+            key: false,
+            keyDown: false,
             keyUp: false
         },
-        d:  {
-            key: false, 
-            keyDown: false, 
+        d: {
+            key: false,
+            keyDown: false,
             keyUp: false
         },
-        q:  {
-            key: false, 
-            keyDown: false, 
+        q: {
+            key: false,
+            keyDown: false,
             keyUp: false
         },
-        s:  {
-            key: false, 
-            keyDown: false, 
+        s: {
+            key: false,
+            keyDown: false,
             keyUp: false
         },
-        w:  {
-            key: false, 
-            keyDown: false, 
+        w: {
+            key: false,
+            keyDown: false,
             keyUp: false
         }
     }
@@ -41,7 +51,7 @@ export class PlayerInput {
         if (this._KeyDown[keyCode].keyDown) {
             this._KeyDown[keyCode].keyDown = false;
             return true;
-        } 
+        }
         return false;
     }
 
@@ -49,7 +59,7 @@ export class PlayerInput {
         if (this._KeyDown[keyCode].keyUp) {
             this._KeyDown[keyCode].keyUp = false;
             return true;
-        } 
+        }
         return false;
     }
 
@@ -63,7 +73,7 @@ export class PlayerInput {
             if (event.repeat) {
                 return;
             }
-            
+
             if (PlayerInput._KeyDown.hasOwnProperty(event.key)) {
                 PlayerInput._KeyDown[event.key].keyUp = false;
                 PlayerInput._KeyDown[event.key].keyDown = true;
@@ -78,10 +88,28 @@ export class PlayerInput {
                 PlayerInput._KeyDown[event.key].key = false;
             }
         });
+
+        addEventListener('mousedown', (event) => {
+            if (PlayerInput._KeyDown.hasOwnProperty(event.button)) {
+                PlayerInput._KeyDown[event.button].keyUp = false;
+                PlayerInput._KeyDown[event.button].keyDown = true;
+                PlayerInput._KeyDown[event.button].key = true;
+            }
+        });
+
+        addEventListener('mouseup', (event) => {
+            if (PlayerInput._KeyDown.hasOwnProperty(event.button)) {
+                PlayerInput._KeyDown[event.button].keyDown = false;
+                PlayerInput._KeyDown[event.button].keyUp = true;
+                PlayerInput._KeyDown[event.button].key = false;
+            }
+        });
     })();
 }
 
 export const KeyCode = {
+    0: '0',
+    2: '2',
     a: 'a',
     b: 'b',
     c: 'c',

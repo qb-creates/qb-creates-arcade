@@ -35,8 +35,10 @@ export class TestFollow extends MonoBehaviour {
     animation = [];
     animationcount = 0;
     update() {
-        let direction = Vector2.subtract(Canvas.mousePosition, this.transform.position);
-        Physics2d.rayCast(this.transform.position, direction);
+        if (PlayerInput.getKey(KeyCode[0])) {
+            let direction = Vector2.subtract(Canvas.mousePosition, this.transform.position);
+            Physics2d.rayCast(this.transform.position, direction);
+        }
         
         if (this.animationcount == 0) {
             this.gameObject.transform.scale = new Vector2(.8, .8);
