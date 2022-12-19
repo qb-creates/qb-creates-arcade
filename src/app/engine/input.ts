@@ -1,4 +1,4 @@
-export class Input {
+export class PlayerInput {
     static _KeyDown = {
         a: {
             key: false, 
@@ -64,18 +64,18 @@ export class Input {
                 return;
             }
             
-            if (Input._KeyDown.hasOwnProperty(event.key)) {
-                Input._KeyDown[event.key].keyUp = false;
-                Input._KeyDown[event.key].keyDown = true;
-                Input._KeyDown[event.key].key = true;
+            if (PlayerInput._KeyDown.hasOwnProperty(event.key)) {
+                PlayerInput._KeyDown[event.key].keyUp = false;
+                PlayerInput._KeyDown[event.key].keyDown = true;
+                PlayerInput._KeyDown[event.key].key = true;
             }
         });
 
         addEventListener('keyup', (event) => {
-            if (Input._KeyDown.hasOwnProperty(event.key)) {
-                Input._KeyDown[event.key].keyDown = false;
-                Input._KeyDown[event.key].keyUp = true;
-                Input._KeyDown[event.key].key = false;
+            if (PlayerInput._KeyDown.hasOwnProperty(event.key)) {
+                PlayerInput._KeyDown[event.key].keyDown = false;
+                PlayerInput._KeyDown[event.key].keyUp = true;
+                PlayerInput._KeyDown[event.key].key = false;
             }
         });
     })();

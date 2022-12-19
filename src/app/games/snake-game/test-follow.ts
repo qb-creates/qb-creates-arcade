@@ -1,4 +1,4 @@
-import { MonoBehaviour, Canvas, Time, Input, KeyCode, Vector2, SpriteRenderer } from "../../engine/qbcreates-js-engine";
+import { MonoBehaviour, Canvas, Time, PlayerInput, KeyCode, Vector2, SpriteRenderer } from "../../engine/qbcreates-js-engine";
 import { GameStateManager } from "./managers/game-state-manager.js";
 import { square } from "../../engine/sprite-renderer";
 import { Physics2d } from "../../engine/physics";

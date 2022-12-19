@@ -1,4 +1,4 @@
-import { MonoBehaviour, Canvas, Input, KeyCode, Vector2, BoxCollider, SpriteRenderer, QObject } from "../../../engine/qbcreates-js-engine";
+import { MonoBehaviour, Canvas, PlayerInput, KeyCode, Vector2, BoxCollider, SpriteRenderer, QObject } from "../../../engine/qbcreates-js-engine";
 import { ScoreManager } from "../managers/score-manager";
 import { SnakeSize } from "../snake/snake-exports";
 

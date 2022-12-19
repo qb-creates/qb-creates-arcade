@@ -1,4 +1,4 @@
-import { MonoBehaviour, Canvas, Time, Input, KeyCode, QObject, Vector2 } from "../../../engine/qbcreates-js-engine";
+import { MonoBehaviour, Canvas, Time, PlayerInput, KeyCode, QObject, Vector2 } from "../../../engine/qbcreates-js-engine";
 
 export class SnakeSize extends MonoBehaviour {
     private _isGrowing: boolean = false;

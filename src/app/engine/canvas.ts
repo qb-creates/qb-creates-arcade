@@ -15,6 +15,8 @@ export class Canvas {
     private static _gameObjectList: GameObject[] = [];
     private static _colliderList: BoxCollider[] = [];
     private static _mousePosition = new Vector2(0, 0);
+    private static _showGrid: boolean = false;
+    private static _showColliders: boolean = false;
     protected static deltaTime: number = 0;
 
     static get canvasWidth() {
@@ -39,6 +41,22 @@ export class Canvas {
 
     static set ppu(value: number) {
         Canvas._ppu = value;
+    }
+
+    static get showGrid() {
+        return this._showGrid;
+    }
+
+    static set showGrid(value: boolean) {
+        this._showGrid = value;
+    }
+
+    static get showColliders() {
+        return this._showColliders;
+    }
+
+    static set showColliders(value: boolean) {
+        this._showColliders = value;
     }
 
     static get context() {
@@ -127,18 +145,18 @@ export class Canvas {
     }
 
     private static drawGrid() {
-        //if (document.getElementById("grid").checked) {
-        let cellCount = Canvas.canvasHeight / (Canvas.ppu * 2);
+        if (this._showGrid) {
+            let cellCount = Canvas.canvasHeight / (Canvas.ppu * 2);
 
-        for (let i = -cellCount; i < cellCount; i++) {
-            for (let j = -cellCount; j < cellCount; j++) {
-                Canvas._context.strokeStyle = '#80808011';
-                Canvas._context.beginPath();
-                Canvas._context.roundRect(i * Canvas.ppu, j * Canvas.ppu, Canvas.ppu, Canvas.ppu, [0]);
-                Canvas._context.stroke();
+            for (let i = -cellCount; i < cellCount; i++) {
+                for (let j = -cellCount; j < cellCount; j++) {
+                    Canvas._context.strokeStyle = '#80808011';
+                    Canvas._context.beginPath();
+                    Canvas._context.roundRect(i * Canvas.ppu, j * Canvas.ppu, Canvas.ppu, Canvas.ppu, [0]);
+                    Canvas._context.stroke();
+                }
             }
         }
-        //}
     }
 
     private static renderSprites() {
@@ -151,7 +169,7 @@ export class Canvas {
         // Render Sprites
         Canvas._gameObjectList.forEach((gameObject) => {
             let renderer = gameObject.getComponent(SpriteRenderer);
-            
+
             if (renderer) {
                 renderer.sprite(renderer);
             }
@@ -179,9 +197,9 @@ export class Canvas {
             }
 
             // Render Colliders
-            //if (document.getElementById("colliders").checked) {
-            collider.render();
-            //}
+            if (this._showColliders) {
+                collider.render();
+            }
         });
     }
 

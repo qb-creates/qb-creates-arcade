@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Input, Canvas, QObject, Vector2 } from 'src/app/engine/qbcreates-js-engine';
+import { PlayerInput, Canvas, QObject, Vector2 } from 'src/app/engine/qbcreates-js-engine';
 import { GameStateManager } from './managers/game-state-manager';
 import * as prefab from './prefabs'
 import { TestFollow } from './test-follow';
@@ -10,9 +10,8 @@ import { TestFollow } from './test-follow';
   styleUrls: ['./snake-game.component.scss']
 })
 export class SnakeGameComponent implements OnInit {
-
   constructor() { }
-
+  
   ngOnInit() {
     Canvas.configureCanvas(500, 500, 25);
     QObject.instantiatePrefabObject(prefab.background);
@@ -30,7 +29,7 @@ export class SnakeGameComponent implements OnInit {
     border.transform.position = new Vector2(0, -10);
 
     let player = QObject.instantiatePrefabObject(prefab.snake);
-    
+
     let enemy = QObject.instantiatePrefabObject(prefab.enemy);
     enemy.getComponent(TestFollow).target = player;
 
