@@ -34,10 +34,19 @@ export class TestFollow extends MonoBehaviour {
     }
     animation = [];
     animationcount = 0;
+    test = false
     update() {
         if (PlayerInput.getKey(KeyCode[0])) {
-            let direction = Vector2.subtract(Canvas.mousePosition, this.transform.position);
-            Physics2d.rayCast(this.transform.position, direction);
+            if (!this.test && Math.abs(Canvas.mousePosition.x - this.transform.position.x) <= 0.2  && Math.abs(Canvas.mousePosition.y - this.transform.position.y) <= 0.2  ){
+                this.test = true;
+            }
+            if (true) {
+                let direction = Vector2.subtract(Canvas.mousePosition, this.transform.position);
+                Physics2d.rayCast(this.transform.position, direction.normalize(), direction.magnitude);
+            }
+        }
+        if (PlayerInput.getKeyUp(KeyCode[0])){
+            this.test = false;
         }
         
         if (this.animationcount == 0) {

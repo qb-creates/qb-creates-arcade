@@ -1,4 +1,5 @@
 import { Canvas, Component, Transform, SpriteRenderer, Vector2, BoxCollider, QObject } from "./qbcreates-js-engine";
+import { UIBehaviour } from "./ui/ui-behaviour";
 
 export class GameObject extends QObject {
     public parent: GameObject = null;
@@ -123,5 +124,13 @@ export class GameObject extends QObject {
             Canvas.addCollider(component);
         }
         return component
+    }
+
+    /**
+     * 
+     * @param T 
+     */
+    addUI(T: UIBehaviour) {
+
     }
 } 

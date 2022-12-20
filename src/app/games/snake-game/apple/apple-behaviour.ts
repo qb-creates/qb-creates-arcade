@@ -19,8 +19,8 @@ export class AppleBehaviour extends MonoBehaviour {
         //     }
         // }
 
-        let w = (Canvas.canvasWidth / (Canvas.ppu * 2) - 1);
-        let h = (Canvas.canvasHeight / (Canvas.ppu * 2) - 1);
+        let w = (500 / (Canvas.ppu * 2) - 1);
+        let h = (500 / (Canvas.ppu * 2) - 1);
         let x = Math.floor(Math.random() * (w * (Math.round(Math.random()) > 0 ? 1 : -1)));
         let y = Math.floor(Math.random() * (h * (Math.round(Math.random()) > 0 ? 1 : -1)));
         

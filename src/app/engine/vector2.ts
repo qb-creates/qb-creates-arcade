@@ -43,7 +43,7 @@ export class Vector2 {
     }
 
     /**
-     * Nomalizes the vector where its magnitude is equal to 1 unit.
+     * Nomalizes the vector to where its magnitude is equal to 1 unit.
      * @returns {Vector2} - Return the normalized Vector
      */
     normalize() {

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GridCheckboxComponent } from './grid-checkbox.component';
+import { CanvasInfoComponent } from './canvas-info.component';
 
-describe('GridCheckboxComponent', () => {
-  let component: GridCheckboxComponent;
-  let fixture: ComponentFixture<GridCheckboxComponent>;
+describe('CanvasInfoComponent', () => {
+  let component: CanvasInfoComponent;
+  let fixture: ComponentFixture<CanvasInfoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GridCheckboxComponent ]
+      declarations: [ CanvasInfoComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GridCheckboxComponent);
+    fixture = TestBed.createComponent(CanvasInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -75,7 +75,7 @@ export class BoxCollider extends Component {
         let h = Canvas.ppu * scale.y;
 
         x = (Canvas.ppu * x) + ((Canvas.ppu - w) / 2);
-        y = (Canvas.ppu * y) + ((Canvas.ppu - h) / 2);
+        y = -1 * (Canvas.ppu * y) + ((Canvas.ppu - h) / 2);
         Canvas.context.lineWidth = 2;
         Canvas.context.strokeStyle = 'green';
         Canvas.context.beginPath();

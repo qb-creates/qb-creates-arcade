@@ -4,14 +4,14 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SnakeGameComponent } from './games/snake-game/snake-game.component';
-import { GridCheckboxComponent } from './games/snake-game/UI/grid-checkbox/grid-checkbox.component';
 import { FormsModule } from '@angular/forms';
+import { CanvasInfoComponent } from './engine/ui/canvas-info/canvas-info.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SnakeGameComponent,
-    GridCheckboxComponent
+    CanvasInfoComponent
   ],
   imports: [
     BrowserModule,

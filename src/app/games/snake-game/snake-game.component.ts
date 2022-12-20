@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PlayerInput, Canvas, QObject, Vector2 } from 'src/app/engine/qbcreates-js-engine';
+import { PlayerInput, Canvas, QObject, Vector2, GameObject } from 'src/app/engine/qbcreates-js-engine';
+import { LabelUI } from 'src/app/engine/ui/label-ui';
 import { GameStateManager } from './managers/game-state-manager';
 import * as prefab from './prefabs'
 import { TestFollow } from './test-follow';
@@ -11,9 +12,9 @@ import { TestFollow } from './test-follow';
 })
 export class SnakeGameComponent implements OnInit {
   constructor() { }
-  
+
   ngOnInit() {
-    Canvas.configureCanvas(500, 500, 25);
+    Canvas.configureCanvas(1280, 720, 25);
     QObject.instantiatePrefabObject(prefab.background);
     QObject.instantiatePrefabObject(prefab.apple);
     let border = QObject.instantiatePrefabObject(prefab.verticalBorder);
@@ -33,9 +34,11 @@ export class SnakeGameComponent implements OnInit {
     let enemy = QObject.instantiatePrefabObject(prefab.enemy);
     enemy.getComponent(TestFollow).target = player;
 
-    let enemy2 = QObject.instantiatePrefabObject(prefab.enemy);
-    enemy2.transform.position = new Vector2(5, -5);
-    enemy2.getComponent(TestFollow).target = player;
+    let scoreLabel = new LabelUI('Score\n0', new GameObject('score label'));
+
+    // let enemy2 = QObject.instantiatePrefabObject(prefab.enemy);
+    // enemy2.transform.position = new Vector2(5, -5);
+    // enemy2.getComponent(TestFollow).target = player;
   }
   onPlay() {
     GameStateManager.onGameStart();

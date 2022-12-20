@@ -5,34 +5,38 @@ import { QObject } from "./q-object";
 import { Vector2 } from "./vector2";
 import { Subject } from "rxjs";
 import { GameObject } from "./game-object";
+import { UIBehaviour } from "./ui/ui-behaviour";
 
 export class Canvas {
     public static canvasUpdate: Subject<boolean> = new Subject<boolean>();
-    private static _canvas = null;
+    private static _canvas: HTMLCanvasElement = null;
     private static _context = null;
+    private static _canvasHeight: number = 0;
+    private static _canvasWidth: number = 0;
     private static _ppu: number = 25;
     private static _previousTimestamp: number = 0;
     private static _gameObjectList: GameObject[] = [];
     private static _colliderList: BoxCollider[] = [];
+    private static _uiList: UIBehaviour[] = [];
     private static _mousePosition = new Vector2(0, 0);
     private static _showGrid: boolean = false;
     private static _showColliders: boolean = false;
     protected static deltaTime: number = 0;
 
     static get canvasWidth() {
-        return Canvas._canvas.width;
+        return Canvas._canvasWidth;
     }
 
     static set canvasWidth(value: number) {
-        Canvas._canvas.width = value;
+        Canvas._canvasWidth = value;
     }
 
     static get canvasHeight() {
-        return Canvas._canvas.height;
+        return Canvas._canvasHeight
     }
 
     static set canvasHeight(value: number) {
-        Canvas._canvas.height = value;
+        Canvas._canvasHeight = value;
     }
 
     static get ppu() {
@@ -81,12 +85,11 @@ export class Canvas {
      */
     public static configureCanvas(canvasWidth: number, canvasHeight: number, ppu: number) {
         Canvas.ppu = ppu;
+        Canvas._canvasHeight = canvasHeight;
+        Canvas._canvasWidth = canvasWidth;
         Canvas._canvas.width = canvasWidth;
         Canvas._canvas.height = canvasHeight;
-
-        // Flips the Y axis. Makes it so that positive y values move north on the grid and negative values move south.
-        Canvas._context.transform(1, 0, 0, -1, 0, canvasHeight);
-
+        
         // Makes it so that (0, 0) is the center of our canvas
         Canvas._context.translate(canvasWidth / 2, canvasHeight / 2);
     }
@@ -105,6 +108,14 @@ export class Canvas {
      */
     public static addCollider(collider: BoxCollider) {
         Canvas._colliderList.push(collider);
+    }
+
+    /**
+     * Will add the ui element to the list of ui that will be rendered.
+     * @param {UIBehaviour} ui - The ui element that needs to be rendered.
+     */
+    public static addUIElement(ui: UIBehaviour) {
+        Canvas._uiList.push(ui);
     }
 
     /**
@@ -138,21 +149,25 @@ export class Canvas {
         Canvas.renderSprites();
         Canvas.collisionCheck();
         Canvas.drawGrid();
+        Canvas.renderUI();
         Canvas.deltaTime = (timestamp - Canvas._previousTimestamp);
         Canvas._previousTimestamp = timestamp;
         Canvas.canvasUpdate.next();
+        
+        // Canvas._context.drawImage(document.getElementById('test-img'), 0, 0);
         requestAnimationFrame(Canvas.updateCanvas);
     }
 
     private static drawGrid() {
         if (this._showGrid) {
-            let cellCount = Canvas.canvasHeight / (Canvas.ppu * 2);
-
-            for (let i = -cellCount; i < cellCount; i++) {
-                for (let j = -cellCount; j < cellCount; j++) {
+            let cellCountHeight = Math.round(Canvas.canvasHeight / (Canvas.ppu * 2));
+            let cellCountWidth = Math.round(Canvas.canvasWidth / (Canvas.ppu * 2));
+            console.log(this.canvasWidth, "       ", cellCountWidth)
+            for (let i = -cellCountWidth; i < cellCountWidth; i++) {
+                for (let j = -cellCountHeight; j < cellCountHeight; j++) {
                     Canvas._context.strokeStyle = '#80808011';
                     Canvas._context.beginPath();
-                    Canvas._context.roundRect(i * Canvas.ppu, j * Canvas.ppu, Canvas.ppu, Canvas.ppu, [0]);
+                    Canvas._context.roundRect((i - .5) * Canvas.ppu, (j - .5) * Canvas.ppu, Canvas.ppu, Canvas.ppu, [0]);
                     Canvas._context.stroke();
                 }
             }
@@ -203,16 +218,19 @@ export class Canvas {
         });
     }
 
+    private static renderUI() {
+        this._uiList.forEach(uiElement => uiElement.onRender());
+    }
+
     // Acts as a private static constructor 
     private static __ctor = (() => {
-        Canvas._canvas = document.createElement('canvas');
-        Canvas._canvas.style = `border: 0px solid white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);`;
-        Canvas._context = Canvas._canvas.getContext('2d');
-
+        Canvas._canvas = <HTMLCanvasElement>document.getElementById('canvas');
+        Canvas._context = Canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
+        
         // Will be used to track our mouse position on the canvas.
-        Canvas._canvas.addEventListener("mousemove", function (evt) {
+        addEventListener("mousemove", function (evt) {
             let rect = Canvas._canvas.getBoundingClientRect();
-
+            
             // Find mouse X and Y coordinates on the canvas by subtracting the mouse's global 
             // X and Y coordinates from the left and top location of the canvas.
             let x = (evt.clientX - rect.left);
@@ -229,9 +247,9 @@ export class Canvas {
         }, false);
 
         // Disables the right click menu from appearing.
-        Canvas._canvas.addEventListener('contextmenu', (e) => {
+        addEventListener('contextmenu', (e) => {
             e.preventDefault();
-          });
+        });
 
         document.body.appendChild(Canvas._canvas);
         requestAnimationFrame(Canvas.updateCanvas);

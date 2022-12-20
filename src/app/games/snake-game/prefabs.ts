@@ -200,13 +200,13 @@ export let verticalBorder = {
     layer: 0,
     objectName: 'border',
     position: new Vector2(0, 0),
-    scale: new Vector2(1, 20),
+    scale: new Vector2(.5, 20),
     components: [
         {
             component: BoxCollider,
             properties: {
                 position: new Vector2(0, 0),
-                scale: new Vector2(.8, 19)
+                scale: new Vector2(.3, 19)
             }
         },
         {
@@ -226,13 +226,13 @@ export let horizontalBorder = {
     layer: 0,
     objectName: 'border',
     position: new Vector2(0, 0),
-    scale: new Vector2(20, 1),
+    scale: new Vector2(20.5, .5),
     components: [
         {
             component: BoxCollider,
             properties: {
                 position: new Vector2(0, 0),
-                scale: new Vector2(19, .8)
+                scale: new Vector2(19, .3)
             }
         },
         {

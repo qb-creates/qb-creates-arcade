@@ -1,1 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+html {
+    // overflow: hidden;
+}
+
+.engine-ui {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    user-select: none;
+    border: transparent .2vh solid;
+}
+
+    button:focus {
+        border: red .2vh solid;
+    }
+    button:active {
+        border: orange .2vh solid;
+    }
+
+
+canvas {
+    border: 2px solid white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
