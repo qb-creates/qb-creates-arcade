@@ -98,12 +98,13 @@ export class QObject {
             gameObject.children.push(child);
         });
 
-        prefab.components.forEach(componentPrefab => {
-            let component = gameObject.addComponent(componentPrefab.component);
+        prefab.components.forEach((componentPrefab: ObjectBase) => {
+            let a = componentPrefab.returnInterface()
+            let component = gameObject.addComponent(a.component);
 
-            for (var key in componentPrefab.properties) {
+            for (var key in a.properties) {
                 if (gameObject[key] != 'undefined') {
-                    Reflect.set(component, key, componentPrefab.properties[key])
+                    Reflect.set(component, key, a.properties[key])
                 }
             }
         });
@@ -123,4 +124,31 @@ export class QObject {
         });
         gameObject.destroy();
     }
+}
+
+/**
+ * 
+ */
+export abstract class ObjectBase {
+    abstract returnInterface() : ComponentObject;
+}
+
+/**
+ * 
+ */
+export interface Prefab {
+    children: Prefab[],
+    layer: number,
+    objectName: string,
+    position: Vector2,
+    scale: Vector2,
+    components: ObjectBase[]
+}
+
+/**
+ * 
+ */
+export interface ComponentObject {
+    component: typeof Component,
+    properties: {}
 }

@@ -14,19 +14,19 @@ export class TestFollow extends MonoBehaviour {
         });
 
         this.animation.push((renderer) => {
-            square(renderer.transform.position.x, renderer.transform.position.y, renderer.color, 'transparent', new Vector2(renderer.transform.scale.x/1, renderer.transform.scale.y/1.25))
+            square(renderer)
         });
         this.animation.push((renderer) => {
-            square(renderer.transform.position.x, renderer.transform.position.y, renderer.color, 'transparent', new Vector2(renderer.transform.scale.x/1.25, renderer.transform.scale.y/1.25))
+            square(renderer)
         });
         this.animation.push((renderer) => {
-            square(renderer.transform.position.x, renderer.transform.position.y, renderer.color, 'transparent', new Vector2(renderer.transform.scale.x/1.5, renderer.transform.scale.y/1.5) )
+            square(renderer)
         });
         this.animation.push((renderer) => {
-            square(renderer.transform.position.x, renderer.transform.position.y, renderer.color, 'transparent', new Vector2(renderer.transform.scale.x/1.75, renderer.transform.scale.y/1.5) )
+            square(renderer )
         });
         this.animation.push((renderer) => {
-            square(renderer.transform.position.x, renderer.transform.position.y, renderer.color, 'transparent', new Vector2(renderer.transform.scale.x/2, renderer.transform.scale.y/2) )
+            square(renderer )
         });
     }
 

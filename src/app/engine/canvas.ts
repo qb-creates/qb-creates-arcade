@@ -89,7 +89,7 @@ export class Canvas {
         Canvas._canvasWidth = canvasWidth;
         Canvas._canvas.width = canvasWidth;
         Canvas._canvas.height = canvasHeight;
-        
+
         // Makes it so that (0, 0) is the center of our canvas
         Canvas._context.translate(canvasWidth / 2, canvasHeight / 2);
     }
@@ -153,7 +153,7 @@ export class Canvas {
         Canvas.deltaTime = (timestamp - Canvas._previousTimestamp);
         Canvas._previousTimestamp = timestamp;
         Canvas.canvasUpdate.next();
-        
+
         // Canvas._context.drawImage(document.getElementById('test-img'), 0, 0);
         requestAnimationFrame(Canvas.updateCanvas);
     }
@@ -219,18 +219,23 @@ export class Canvas {
     }
 
     private static renderUI() {
-        this._uiList.forEach(uiElement => uiElement.onRender());
+        Canvas._gameObjectList.forEach(gameObject => {
+            let uiList: UIBehaviour[] = gameObject.getComponents(UIBehaviour);
+            uiList.forEach(ui => {
+                ui.render();
+            });
+        })
     }
 
     // Acts as a private static constructor 
     private static __ctor = (() => {
         Canvas._canvas = <HTMLCanvasElement>document.getElementById('canvas');
         Canvas._context = Canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
-        
+
         // Will be used to track our mouse position on the canvas.
         addEventListener("mousemove", function (evt) {
             let rect = Canvas._canvas.getBoundingClientRect();
-            
+
             // Find mouse X and Y coordinates on the canvas by subtracting the mouse's global 
             // X and Y coordinates from the left and top location of the canvas.
             let x = (evt.clientX - rect.left);

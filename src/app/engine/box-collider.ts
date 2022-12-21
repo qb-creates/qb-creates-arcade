@@ -1,3 +1,4 @@
+import { ComponentObject, ObjectBase } from "./q-object";
 import { Canvas, Component, GameObject, Vector2 } from "./qbcreates-js-engine";
 
 export class BoxCollider extends Component {
@@ -23,7 +24,7 @@ export class BoxCollider extends Component {
             this.onRender(this.position.x, this.position.y, this.scale);
         };
     }
-    
+
     /**
      * The collider will determine if it overlaps with the input collider. R
      * @param {BoxCollider} collider - The collider we want to check for overlap with.
@@ -82,6 +83,29 @@ export class BoxCollider extends Component {
         Canvas.context.roundRect(x - (Canvas.ppu / 2), y - (Canvas.ppu / 2), w, h);
         Canvas.context.stroke();
         Canvas.context.lineWidth = 1;
+    }
+}
+
+export class BoxColliderObject extends ObjectBase {
+    private _position: Vector2 = new Vector2(0, 0);
+    private _scale: Vector2 = new Vector2(0, 0);
+
+    constructor(position: Vector2, scale: Vector2) {
+        super();
+        this._position = position;
+        this._scale = scale;
+    }
+
+    public returnInterface(): ComponentObject {
+        let spriteRenderer: ComponentObject = {
+            component: BoxCollider,
+            properties: {
+                position: this._position,
+                scale: this._scale
+            }
+        }
+
+        return spriteRenderer;
     }
 }
 

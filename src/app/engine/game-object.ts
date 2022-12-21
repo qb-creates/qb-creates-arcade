@@ -4,7 +4,7 @@ import { UIBehaviour } from "./ui/ui-behaviour";
 export class GameObject extends QObject {
     public parent: GameObject = null;
     private _objectName: string = '';
-    private _scriptList = [];
+    private _componentList = [];
     private _children: GameObject[] = [];
     private _isDestroyed: boolean = false;
     private _transform: Transform = null;
@@ -55,7 +55,7 @@ export class GameObject extends QObject {
         super();
         this._objectName = objectName;
         this._transform = new Transform(this)
-        this._scriptList.push(this._transform);
+        this._componentList.push(this._transform);
     }
 
     /**
@@ -85,8 +85,8 @@ export class GameObject extends QObject {
      * @returns The first one listed will be returned. Returns null if the script Type isn't found.
      */
     getComponent(T: typeof Component) {
-        if (this._scriptList) {
-            return this._scriptList.find(component => component instanceof T);
+        if (this._componentList) {
+            return this._componentList.find(component => component instanceof T);
         }
         return null;
     }
@@ -97,8 +97,8 @@ export class GameObject extends QObject {
      * @returns A list of all instances will be returned. Returns null if the script Type isn't found.
      */
     getComponents(T: typeof Component) {
-        if (this._scriptList) {
-            return this._scriptList.filter(component => component instanceof T);
+        if (this._componentList) {
+            return this._componentList.filter(component => component instanceof T);
         }
         return null;
     }
@@ -113,24 +113,16 @@ export class GameObject extends QObject {
             throw new Error(`Can not add another transform to ${this._objectName}.`);
         }
 
-        if (T === SpriteRenderer && this._scriptList.find(component => component instanceof SpriteRenderer)) {
+        if (T === SpriteRenderer && this._componentList.find(component => component instanceof SpriteRenderer)) {
             throw new Error(`Can not add another SpriteRenderer to ${this._objectName}.`);
         }
 
         let component = new T(this);
-        this._scriptList.push(component);
+        this._componentList.push(component);
 
         if (component instanceof BoxCollider) {
             Canvas.addCollider(component);
         }
         return component
-    }
-
-    /**
-     * 
-     * @param T 
-     */
-    addUI(T: UIBehaviour) {
-
     }
 } 

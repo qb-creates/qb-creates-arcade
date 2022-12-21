@@ -1,9 +1,11 @@
+import { LabelUI } from "src/app/engine/ui/label-ui";
+
 export class ScoreManager {
+    public static scoreText: LabelUI = null;
     private static _score: number = 0;
 
     static addPoint() {
         this._score++;
-        let scoreLabel = document.getElementById('score');
-        scoreLabel.innerHTML = this._score.toString();
+        this.scoreText.text = `Score\n${this._score}`;
     }
 }

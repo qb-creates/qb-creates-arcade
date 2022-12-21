@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlayerInput, Canvas, QObject, Vector2, GameObject } from 'src/app/engine/qbcreates-js-engine';
 import { LabelUI } from 'src/app/engine/ui/label-ui';
 import { GameStateManager } from './managers/game-state-manager';
+import { ScoreManager } from './managers/score-manager';
 import * as prefab from './prefabs'
 import { TestFollow } from './test-follow';
 
@@ -34,8 +35,7 @@ export class SnakeGameComponent implements OnInit {
     let enemy = QObject.instantiatePrefabObject(prefab.enemy);
     enemy.getComponent(TestFollow).target = player;
 
-    let scoreLabel = new LabelUI('Score\n0', new GameObject('score label'));
-
+    ScoreManager.scoreText =  QObject.instantiatePrefabObject(prefab.scoreLabel).getComponent(LabelUI);
     // let enemy2 = QObject.instantiatePrefabObject(prefab.enemy);
     // enemy2.transform.position = new Vector2(5, -5);
     // enemy2.getComponent(TestFollow).target = player;
