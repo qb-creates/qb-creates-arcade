@@ -1,4 +1,4 @@
-import { MonoBehaviour, SpriteRenderer, Time, Vector2, Canvas } from "../../../engine/qbcreates-js-engine";
+import { MonoBehaviour, SpriteRenderer, Time, Vector2, Canvas, PlayerInput, KeyCode } from "../../../engine/qbcreates-js-engine";
 import { GameStateManager } from "../managers/game-state-manager";
 import { SnakeSize, snakeHeadColor, snakeBodyColor } from "./snake-exports";
 

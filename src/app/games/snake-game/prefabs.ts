@@ -114,7 +114,7 @@ export let verticalBorder: Prefab = {
     scale: new Vector2(.5, 20),
     components: [
         new SpriteRendererObject('white', square),
-        new BoxColliderObject(new Vector2(0, 0), new Vector2(.3, .19))
+        new BoxColliderObject(new Vector2(0, 0), new Vector2(.3, 19))
     ]
 }
 

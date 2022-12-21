@@ -1,5 +1,5 @@
 export class PlayerInput {
-    private static _KeyDown = {
+    public static _KeyDown = {
         0: {
             key: false,
             keyDown: false,
@@ -48,19 +48,11 @@ export class PlayerInput {
     }
 
     static getKeyDown(keyCode) {
-        if (this._KeyDown[keyCode].keyDown) {
-            this._KeyDown[keyCode].keyDown = false;
-            return true;
-        }
-        return false;
+        return this._KeyDown[keyCode].keyDown;
     }
 
     static getKeyUp(keyCode) {
-        if (this._KeyDown[keyCode].keyUp) {
-            this._KeyDown[keyCode].keyUp = false;
-            return true;
-        }
-        return false;
+        return this._KeyDown[keyCode].keyUp;
     }
 
     static getKey(keyCode) {

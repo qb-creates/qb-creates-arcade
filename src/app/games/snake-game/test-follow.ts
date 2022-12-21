@@ -23,10 +23,10 @@ export class TestFollow extends MonoBehaviour {
             square(renderer)
         });
         this.animation.push((renderer) => {
-            square(renderer )
+            square(renderer)
         });
         this.animation.push((renderer) => {
-            square(renderer )
+            square(renderer)
         });
     }
 
@@ -37,18 +37,18 @@ export class TestFollow extends MonoBehaviour {
     test = false
     update() {
         if (PlayerInput.getKey(KeyCode[0])) {
-            if (!this.test && Math.abs(Canvas.mousePosition.x - this.transform.position.x) <= 0.2  && Math.abs(Canvas.mousePosition.y - this.transform.position.y) <= 0.2  ){
+            if (!this.test && Math.abs(Canvas.mousePosition.x - this.transform.position.x) <= 0.2 && Math.abs(Canvas.mousePosition.y - this.transform.position.y) <= 0.2) {
                 this.test = true;
             }
-            if (true) {
+            if (this.test) {
                 let direction = Vector2.subtract(Canvas.mousePosition, this.transform.position);
                 Physics2d.rayCast(this.transform.position, direction.normalize(), direction.magnitude);
             }
         }
-        if (PlayerInput.getKeyUp(KeyCode[0])){
+        if (PlayerInput.getKeyUp(KeyCode[0])) {
             this.test = false;
         }
-        
+
         if (this.animationcount == 0) {
             this.gameObject.transform.scale = new Vector2(.8, .8);
         }
@@ -74,7 +74,7 @@ export class TestFollow extends MonoBehaviour {
             this.gameObject.transform.scale = new Vector2(.8, .8);
             this.animationcount = 0;
         }
-        
+
         if (this.target) {
             let step = this.speed * Time.deltaTime;
             let myTarg = this.target.children[this.target.children.length - 1];

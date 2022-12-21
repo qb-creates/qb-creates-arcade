@@ -1,4 +1,4 @@
-import { GameObject, Vector2, Component, Transform, Canvas, MonoBehaviour } from "./qbcreates-js-engine";
+import { GameObject, Vector2, Component, Transform, Canvas, MonoBehaviour, SpriteRenderer } from "./qbcreates-js-engine";
 import { Guid } from "guid-typescript";
 
 export class QObject {
@@ -23,13 +23,54 @@ export class QObject {
     }
 
     /**
-     * Clones the original gameObject and returns the clone
-     * @param {GameObject} originalGameObject - GameObject that will be cloned.
-     * @param {GameObject} parent - The gameObject the cloned object will become a child of.
-     * @param {Vector2} position - Starting position of the cloned object.
-     * @returns 
+     * Clones the object original and returns the clone.
+     * @param {Prefab} originalGameObject - An existing prefab that you want to make a copy of.
+     * @returns {GameObject} - Returns the newly created gameObject.
      */
-    static instantiate(originalGameObject: GameObject, parent: GameObject = null, position: Vector2 = new Vector2(0, 0)) {
+    static instantiate(originalGameObject: Prefab): GameObject;
+
+    /**
+     * Clones the object original and returns the clone.
+     * @param {GameObject} originalGameObject - An existing object that you want to make a copy of.
+     * @returns {GameObject} - Returns the newly created gameObject.
+     */
+    static instantiate(originalGameObject: GameObject): GameObject;
+
+    /**
+     * Clones the object original and returns the clone.
+     * @param originalGameObject - An existing object that you want to make a copy of.
+     * @param parent - Parent that will be assigned to the new object.
+     * @param position - Position for the new object.
+     */
+    static instantiate(originalGameObject: GameObject, parent: GameObject, position: Vector2): GameObject;
+
+    /**
+     * Clones the object original and returns the clone.
+     * @param originalGameObject - An existing object that you want to make a copy of.
+     * @param parent - Parent that will be assigned to the new object.
+     * @param position - Position for the new object.
+     */
+    static instantiate(originalGameObject: Prefab | GameObject, parent?: GameObject, position?: Vector2): GameObject {
+        if (originalGameObject instanceof GameObject) {
+            return QObject.instantiateGameObject(originalGameObject as GameObject, parent, position);
+        } else if (QObject.isPrefab(originalGameObject)) {
+            return QObject.instantiatePrefabObject(originalGameObject as Prefab);
+        }
+    }
+
+    /**
+     * Removes a gameObject component
+     * @param {GameObject} gameObject - The gameObject that will be removed.
+     */
+    static destroy(gameObject: GameObject) {
+        Canvas.removeGameObject(gameObject);
+        gameObject.getComponents(MonoBehaviour).forEach(component => {
+            component.destroy();
+        });
+        gameObject.destroy();
+    }
+
+    private static instantiateGameObject(originalGameObject: GameObject, parent: GameObject = null, position: Vector2 = new Vector2(0, 0)) {
         // let underscorIndex = originalGameObject.objectName.lastIndexOf('_');
         // let newName = originalGameObject.objectName + '_1';
 
@@ -39,16 +80,19 @@ export class QObject {
         //     let a ='sdf'
         //     a.
         // }
-        let clonedObject = new GameObject(originalGameObject.objectName);
 
+        // Create the new GameObject.
+        let clonedObject = new GameObject(originalGameObject.objectName);
         clonedObject.layer = originalGameObject.layer;
         clonedObject.transform.position = new Vector2(originalGameObject.transform.position.x, originalGameObject.transform.position.y);
         clonedObject.transform.scale = new Vector2(originalGameObject.transform.scale.x, originalGameObject.transform.scale.y);
-
+        
+        // Recursively create new instances of the children GameObjects
         originalGameObject.children.forEach(child => {
-            QObject.instantiate(child, clonedObject);
+            QObject.instantiateGameObject(child, clonedObject);
         });
 
+        // Recursively create the components and add them to the current GameObject.
         originalGameObject.getComponents(Component).forEach(script => {
             if (!(script instanceof Transform)) {
 
@@ -65,64 +109,61 @@ export class QObject {
             }
         });
 
+        // Add to the parent if it is not null
         if (parent) {
-            if (parent instanceof GameObject) {
-                parent.addGameObject(clonedObject);
-            } else {
-                throw new Error(`Error instantiating ${typeof (originalGameObject.objectName)}. ${parent} is not of type gameObject.`)
-            }
+            parent.addGameObject(clonedObject);
         }
 
+        // Set the position if it is not null
         if (position) {
             clonedObject.transform.position = position;
         }
 
+        // Add the gameObject to the canvas to be rendered.
         Canvas.addGameObject(clonedObject);
         return clonedObject;
     }
 
-    /**
-     * Creates an instance of a prefabe object.
-     * @param {*} prefab - The prefab object that we want to create.
-     * @returns 
-     */
-    static instantiatePrefabObject(prefab) {
+    private static instantiatePrefabObject(prefab: Prefab) {
+        // Create the new GameObject.
         let gameObject = new GameObject(prefab.objectName);
         gameObject.layer = prefab.layer;
         gameObject.transform.position = prefab.position;
         gameObject.transform.scale = prefab.scale;
 
+        // Recursively create new instances of the children prefabs and push them into the parent GameObject
         prefab.children.forEach(childPrefab => {
             let child = QObject.instantiatePrefabObject(childPrefab);
             child.parent = gameObject;
             gameObject.children.push(child);
         });
 
+        // Recursively create the components and add them to the current GameObject.
         prefab.components.forEach((componentPrefab: ObjectBase) => {
-            let a = componentPrefab.returnInterface()
-            let component = gameObject.addComponent(a.component);
+            // Get the component interface from the prefab.
+            let componentInterface = componentPrefab.returnInterface();
 
-            for (var key in a.properties) {
+            // Create the component.
+            let component = gameObject.addComponent(componentInterface.component);
+
+            // Copy property values from the component interface over to the component.
+            for (var key in componentInterface.properties) {
                 if (gameObject[key] != 'undefined') {
-                    Reflect.set(component, key, a.properties[key])
+                    Reflect.set(component, key, componentInterface.properties[key])
                 }
             }
         });
 
+        // Add the gameObject to the canvas to be rendered.
         Canvas.addGameObject(gameObject);
         return gameObject;
     }
 
-    /**
-     * Removes a gameObject component
-     * @param {GameObject} gameObject - The gameObject that will be removed.
-     */
-    static destroy(gameObject: GameObject) {
-        Canvas.removeGameObject(gameObject);
-        gameObject.getComponents(MonoBehaviour).forEach(component => {
-            component.destroy();
-        });
-        gameObject.destroy();
+    private static isPrefab(object: Prefab) {
+        return (object as Prefab).children !== undefined
+            && (object as Prefab).layer !== undefined
+            && (object as Prefab).components !== undefined
+            && (object as Prefab).objectName !== undefined;
     }
 }
 
@@ -130,7 +171,7 @@ export class QObject {
  * 
  */
 export abstract class ObjectBase {
-    abstract returnInterface() : ComponentObject;
+    abstract returnInterface(): ComponentObject;
 }
 
 /**

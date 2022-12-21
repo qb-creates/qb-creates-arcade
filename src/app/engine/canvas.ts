@@ -6,6 +6,7 @@ import { Vector2 } from "./vector2";
 import { Subject } from "rxjs";
 import { GameObject } from "./game-object";
 import { UIBehaviour } from "./ui/ui-behaviour";
+import { PlayerInput } from "./input";
 
 export class Canvas {
     public static canvasUpdate: Subject<boolean> = new Subject<boolean>();
@@ -145,6 +146,7 @@ export class Canvas {
     }
 
     private static updateCanvas = (timestamp) => {
+
         Canvas._context.clearRect(-Canvas._canvas.width / 2, -Canvas._canvas.height / 2, Canvas._canvas.width, Canvas._canvas.height);
         Canvas.renderSprites();
         Canvas.collisionCheck();
@@ -154,7 +156,15 @@ export class Canvas {
         Canvas._previousTimestamp = timestamp;
         Canvas.canvasUpdate.next();
 
-        // Canvas._context.drawImage(document.getElementById('test-img'), 0, 0);
+        Object.entries(PlayerInput._KeyDown).forEach(([key]) => {
+            if (PlayerInput._KeyDown[key].keyDown) {
+                PlayerInput._KeyDown[key].keyDown = false;
+            }
+            
+            if ( PlayerInput._KeyDown[key].keyUp) {
+                PlayerInput._KeyDown[key].keyUp = false;
+            }
+        });
         requestAnimationFrame(Canvas.updateCanvas);
     }
 
