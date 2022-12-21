@@ -1,5 +1,5 @@
 export class PlayerInput {
-    public static _KeyDown = {
+    private static _KeyStatus = {
         0: {
             key: false,
             keyDown: false,
@@ -47,16 +47,28 @@ export class PlayerInput {
         }
     }
 
-    static getKeyDown(keyCode) {
-        return this._KeyDown[keyCode].keyDown;
+    public static getKeyDown(keyCode) {
+        return this._KeyStatus[keyCode].keyDown;
     }
 
-    static getKeyUp(keyCode) {
-        return this._KeyDown[keyCode].keyUp;
+    public static getKeyUp(keyCode) {
+        return this._KeyStatus[keyCode].keyUp;
     }
 
-    static getKey(keyCode) {
-        return this._KeyDown[keyCode].key;
+    public static getKey(keyCode) {
+        return this._KeyStatus[keyCode].key;
+    }
+
+    public static clearKeyStatus() {
+        Object.entries(PlayerInput._KeyStatus).forEach(([key]) => {
+            if (PlayerInput._KeyStatus[key].keyDown) {
+                PlayerInput._KeyStatus[key].keyDown = false;
+            }
+
+            if (PlayerInput._KeyStatus[key].keyUp) {
+                PlayerInput._KeyStatus[key].keyUp = false;
+            }
+        });
     }
 
     // Acts as a private static constructor 
@@ -66,34 +78,34 @@ export class PlayerInput {
                 return;
             }
 
-            if (PlayerInput._KeyDown.hasOwnProperty(event.key)) {
-                PlayerInput._KeyDown[event.key].keyUp = false;
-                PlayerInput._KeyDown[event.key].keyDown = true;
-                PlayerInput._KeyDown[event.key].key = true;
+            if (PlayerInput._KeyStatus.hasOwnProperty(event.key)) {
+                PlayerInput._KeyStatus[event.key].keyUp = false;
+                PlayerInput._KeyStatus[event.key].keyDown = true;
+                PlayerInput._KeyStatus[event.key].key = true;
             }
         });
 
         addEventListener('keyup', (event) => {
-            if (PlayerInput._KeyDown.hasOwnProperty(event.key)) {
-                PlayerInput._KeyDown[event.key].keyDown = false;
-                PlayerInput._KeyDown[event.key].keyUp = true;
-                PlayerInput._KeyDown[event.key].key = false;
+            if (PlayerInput._KeyStatus.hasOwnProperty(event.key)) {
+                PlayerInput._KeyStatus[event.key].keyDown = false;
+                PlayerInput._KeyStatus[event.key].keyUp = true;
+                PlayerInput._KeyStatus[event.key].key = false;
             }
         });
 
         addEventListener('mousedown', (event) => {
-            if (PlayerInput._KeyDown.hasOwnProperty(event.button)) {
-                PlayerInput._KeyDown[event.button].keyUp = false;
-                PlayerInput._KeyDown[event.button].keyDown = true;
-                PlayerInput._KeyDown[event.button].key = true;
+            if (PlayerInput._KeyStatus.hasOwnProperty(event.button)) {
+                PlayerInput._KeyStatus[event.button].keyUp = false;
+                PlayerInput._KeyStatus[event.button].keyDown = true;
+                PlayerInput._KeyStatus[event.button].key = true;
             }
         });
 
         addEventListener('mouseup', (event) => {
-            if (PlayerInput._KeyDown.hasOwnProperty(event.button)) {
-                PlayerInput._KeyDown[event.button].keyDown = false;
-                PlayerInput._KeyDown[event.button].keyUp = true;
-                PlayerInput._KeyDown[event.button].key = false;
+            if (PlayerInput._KeyStatus.hasOwnProperty(event.button)) {
+                PlayerInput._KeyStatus[event.button].keyDown = false;
+                PlayerInput._KeyStatus[event.button].keyUp = true;
+                PlayerInput._KeyStatus[event.button].key = false;
             }
         });
     })();

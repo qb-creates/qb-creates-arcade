@@ -75,7 +75,7 @@ export class TestFollow extends MonoBehaviour {
             this.animationcount = 0;
         }
 
-        if (this.target) {
+        if (this.target && this.target.children[this.target.children.length - 1]) {
             let step = this.speed * Time.deltaTime;
             let myTarg = this.target.children[this.target.children.length - 1];
             let placeholder = Vector2.subtract(myTarg.transform.position, this.transform.position).normalize();

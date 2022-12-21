@@ -7,6 +7,6 @@ export { MonoBehaviour } from "./mono-behaviour";
 export { BoxCollider } from "./box-collider";
 export { Canvas } from "./canvas";
 export { Time } from "./time";
-export { PlayerInput, KeyCode } from "./input";
+export { PlayerInput, KeyCode } from "./player-input";
 export { Vector2 } from "./vector2"
 export { Vector3 } from "./vector3";

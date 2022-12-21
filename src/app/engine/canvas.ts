@@ -6,9 +6,9 @@ import { Vector2 } from "./vector2";
 import { Subject } from "rxjs";
 import { GameObject } from "./game-object";
 import { UIBehaviour } from "./ui/ui-behaviour";
-import { PlayerInput } from "./input";
+import { PlayerInput } from "./player-input";
 
-export class Canvas {
+export abstract class Canvas {
     public static canvasUpdate: Subject<boolean> = new Subject<boolean>();
     private static _canvas: HTMLCanvasElement = null;
     private static _context = null;
@@ -70,12 +70,6 @@ export class Canvas {
 
     static get mousePosition() {
         return Canvas._mousePosition;
-    }
-
-    constructor() {
-        if (Canvas instanceof Canvas) {
-            throw new Error("A static class cannot be instantiated.");
-        }
     }
 
     /**
@@ -146,25 +140,32 @@ export class Canvas {
     }
 
     private static updateCanvas = (timestamp) => {
-
         Canvas._context.clearRect(-Canvas._canvas.width / 2, -Canvas._canvas.height / 2, Canvas._canvas.width, Canvas._canvas.height);
         Canvas.renderSprites();
         Canvas.collisionCheck();
         Canvas.drawGrid();
         Canvas.renderUI();
+        Canvas.renderFPS();
         Canvas.deltaTime = (timestamp - Canvas._previousTimestamp);
         Canvas._previousTimestamp = timestamp;
         Canvas.canvasUpdate.next();
+        PlayerInput.clearKeyStatus();
+        let a = new Image();
+        a.src = './assets/Square.png';
+        Canvas._context.drawImage(a, 0, 0, 25, 25)
+        var myImg = Canvas._context.getImageData(0, 0, Canvas.canvasWidth, Canvas.canvasHeight);
+        let pix = myImg.data;
+        let n    = pix.length;
 
-        Object.entries(PlayerInput._KeyDown).forEach(([key]) => {
-            if (PlayerInput._KeyDown[key].keyDown) {
-                PlayerInput._KeyDown[key].keyDown = false;
-            }
-            
-            if ( PlayerInput._KeyDown[key].keyUp) {
-                PlayerInput._KeyDown[key].keyUp = false;
-            }
-        });
+         for (let i = 0; i < n; i += 4) { 
+             if (pix[i + 3] > 0) { 
+                 pix[i    ] = 255;       // red   - values 0 to 255
+                 pix[i + 1] = 255;       // green - values between 0 and 255
+                 pix[i + 2] = 0;       // blue  - values between 0 and 255
+                 pix[i + 3] = 1 * 255; // alpha in canvas from 0 to 255, instead between 0 and 1. 
+             } 
+         } 
+         Canvas._context.putImageData(myImg, 0, 0); 
         requestAnimationFrame(Canvas.updateCanvas);
     }
 
@@ -172,7 +173,6 @@ export class Canvas {
         if (this._showGrid) {
             let cellCountHeight = Math.round(Canvas.canvasHeight / (Canvas.ppu * 2));
             let cellCountWidth = Math.round(Canvas.canvasWidth / (Canvas.ppu * 2));
-            console.log(this.canvasWidth, "       ", cellCountWidth)
             for (let i = -cellCountWidth; i < cellCountWidth; i++) {
                 for (let j = -cellCountHeight; j < cellCountHeight; j++) {
                     Canvas._context.strokeStyle = '#80808011';
@@ -237,6 +237,15 @@ export class Canvas {
         })
     }
 
+    private static renderFPS() {
+        Canvas.context.fillStyle = 'green';
+        Canvas.context.font = '30px Arial';
+
+        let x = (20 * Canvas.ppu);
+        let y = (-1 * 13 * Canvas.ppu);
+        Canvas.context.fillText(`${Math.round(1000 / Canvas.deltaTime)} fps`, x, y);
+    }
+
     // Acts as a private static constructor 
     private static __ctor = (() => {
         Canvas._canvas = <HTMLCanvasElement>document.getElementById('canvas');
@@ -266,7 +275,6 @@ export class Canvas {
             e.preventDefault();
         });
 
-        document.body.appendChild(Canvas._canvas);
         requestAnimationFrame(Canvas.updateCanvas);
     })();
 }
