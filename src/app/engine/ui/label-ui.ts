@@ -7,6 +7,7 @@ import { UIBehaviour } from "./ui-behaviour";
 export class LabelUI extends UIBehaviour {
     public text: string = '';
     public color: string = '';
+    public transparency: number = 1;
     public fontStyle: string = '';
     public lineHeight: number = 0;
     public positionOffset: Vector2 = new Vector2(0, 0);
@@ -14,10 +15,7 @@ export class LabelUI extends UIBehaviour {
     constructor(gameObject: GameObject) {
         super(gameObject);
     }
-
-    awake(): void {
-        this.positionOffset = new Vector2(0, .15)
-    }
+    
     public render(): void {
         Canvas.context.fillStyle = this.color;
         Canvas.context.font = this.fontStyle;

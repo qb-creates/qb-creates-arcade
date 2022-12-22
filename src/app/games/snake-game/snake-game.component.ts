@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PlayerInput, Canvas, QObject, Vector2, GameObject } from 'src/app/engine/qbcreates-js-engine';
+import { PlayerInput, Canvas, QObject, Vector2, GameObject, SpriteRenderer } from 'src/app/engine/qbcreates-js-engine';
 import { LabelUI } from 'src/app/engine/ui/label-ui';
 import { GameStateManager } from './managers/game-state-manager';
 import { ScoreManager } from './managers/score-manager';
@@ -31,7 +31,7 @@ export class SnakeGameComponent implements OnInit {
     border.transform.position = new Vector2(0, -10);
 
     let player = QObject.instantiate(prefab.snake);
-
+  
     let enemy = QObject.instantiate(prefab.enemy);
     enemy.getComponent(TestFollow).target = player;
 

@@ -8,6 +8,7 @@ import { UIBehaviour } from "./ui-behaviour";
 
 export class ButtonUI extends UIBehaviour {
     public color: string = '';
+    public transparency: number = 1;
     private _clickEvent: Subject<boolean> = new Subject<boolean>();
 
     get clickEvent() {
@@ -33,9 +34,10 @@ export class ButtonUI extends UIBehaviour {
 
         x = x + (Canvas.ppu - w) / 2;
         y = y + (Canvas.ppu - h) / 2;
-        
+
         Canvas.context.fillStyle = color;
         Canvas.context.strokeStyle = borderColor;
+        Canvas.context.globalAlpha = this.transparency;
         Canvas.context.beginPath();
         Canvas.context.roundRect(x, y, w, h, 5);
         Canvas.context.stroke();

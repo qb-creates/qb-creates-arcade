@@ -21,9 +21,9 @@ export let squareSprite: SpriteShape = {
 
         x = x + (Canvas.ppu - w) / 2;
         y = y + (Canvas.ppu - h) / 2;
-        
         Canvas.context.fillStyle = color;
         Canvas.context.strokeStyle = borderColor;
+        Canvas.context.globalAlpha = renderer.transparency;
         Canvas.context.beginPath();
         Canvas.context.roundRect(x, y, w, h, 5);
         Canvas.context.stroke();

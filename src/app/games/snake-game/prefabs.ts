@@ -11,6 +11,7 @@ import { squareSprite } from "src/app/engine/sprite-shape";
 import { ButtonObject } from "src/app/engine/ui/button-ui";
 import { GameStateManager } from "./managers/game-state-manager";
 import { PlayButton } from "./ui/play-button";
+import { Sprite } from "src/app/engine/sprite";
 
 export let snake: Prefab = {
     children: [
@@ -18,10 +19,22 @@ export let snake: Prefab = {
             children: [],
             layer: 1,
             objectName: "snakeBody",
-            position: new Vector2(0, 0),
+            position: new Vector2(-1, 0),
             scale: new Vector2(.6, .6),
             components: [
-                new BoxColliderObject(new Vector2(0, 0), new Vector2(.6, .6)),
+                new BoxColliderObject(new Vector2(-1, 0), new Vector2(.6, .6)),
+                new SpriteRendererObject(snakeBodyColor, squareSprite),
+                new MonoBehaviourObject(SnakeCollision)
+            ]
+        },
+        {
+            children: [],
+            layer: 1,
+            objectName: "snakeBody",
+            position: new Vector2(0, 0),
+            scale: new Vector2(.8, .8),
+            components: [
+                new BoxColliderObject(new Vector2(0, 0), new Vector2(.8, .8)),
                 new SpriteRendererObject(snakeBodyColor, squareSprite),
                 new MonoBehaviourObject(SnakeCollision)
             ]
@@ -31,21 +44,9 @@ export let snake: Prefab = {
             layer: 1,
             objectName: "snakeBody",
             position: new Vector2(1, 0),
-            scale: new Vector2(.8, .8),
-            components: [
-                new BoxColliderObject(new Vector2(1, 0), new Vector2(.8, .8)),
-                new SpriteRendererObject(snakeBodyColor, squareSprite),
-                new MonoBehaviourObject(SnakeCollision)
-            ]
-        },
-        {
-            children: [],
-            layer: 1,
-            objectName: "snakeBody",
-            position: new Vector2(2, 0),
             scale: new Vector2(1, 1),
             components: [
-                new BoxColliderObject(new Vector2(2, 0), new Vector2(1, 1)),
+                new BoxColliderObject(new Vector2(1, 0), new Vector2(1, 1)),
                 new SpriteRendererObject(snakeHeadColor, squareSprite),
                 new MonoBehaviourObject(SnakeCollision)
             ]
@@ -79,11 +80,11 @@ export let playButton: Prefab = {
     children: [],
     layer: 0,
     objectName: "playButton",
-    position: new Vector2(0, 0),
-    scale: new Vector2(3.3, 2),
+    position: new Vector2(0, 8),
+    scale: new Vector2(3.8, 2),
     components: [
         new ButtonObject('red'),
-        new LabelObject('Play', 'white', 'Bold 40px Times New Roman', 35),
+        new LabelObject('Play', 'white', 'Bold 40px Monospace', 35),
         new MonoBehaviourObject(PlayButton)
     ]
 }
@@ -95,7 +96,7 @@ export let scoreLabel: Prefab = {
     position: new Vector2(0, 13),
     scale: new Vector2(1, 1),
     components: [
-        new LabelObject('Score\n0', 'white', 'Bold 40px Times New Roman', 35)
+        new LabelObject('Score\n0', 'white', 'Bold 40px Monospace', 35)
     ]
 }
 

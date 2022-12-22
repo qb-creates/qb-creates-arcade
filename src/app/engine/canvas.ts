@@ -162,8 +162,9 @@ export abstract class Canvas {
             for (let i = -cellCountWidth; i < cellCountWidth; i++) {
                 for (let j = -cellCountHeight; j < cellCountHeight; j++) {
                     Canvas._context.strokeStyle = '#80808011';
+                    Canvas.context.globalAlpha = 1;
                     Canvas._context.beginPath();
-                    Canvas._context.roundRect((i - .5) * Canvas.ppu, (j - .5) * Canvas.ppu, Canvas.ppu, Canvas.ppu, [0]);
+                    Canvas._context.roundRect((i * Canvas.ppu), (j * Canvas.ppu), Canvas.ppu, Canvas.ppu, [0]);
                     Canvas._context.stroke();
                 }
             }
@@ -191,7 +192,7 @@ export abstract class Canvas {
                     
                     x = x + (Canvas.ppu - w) / 2;
                     y = y + (Canvas.ppu - h) / 2;
-    
+                    Canvas.context.globalAlpha = renderer.transparency;
                     Canvas._context.drawImage(renderer.sprite.image, x, y, w, h)
                 } else {
                     (renderer.sprite as SpriteShape).drawShape(renderer);
