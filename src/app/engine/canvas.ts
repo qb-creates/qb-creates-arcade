@@ -7,6 +7,8 @@ import { Subject } from "rxjs";
 import { GameObject } from "./game-object";
 import { UIBehaviour } from "./ui/ui-behaviour";
 import { PlayerInput } from "./player-input";
+import { SpriteShape } from "./sprite-shape";
+import { Sprite } from "./sprite";
 
 export abstract class Canvas {
     public static canvasUpdate: Subject<boolean> = new Subject<boolean>();
@@ -150,22 +152,6 @@ export abstract class Canvas {
         Canvas._previousTimestamp = timestamp;
         Canvas.canvasUpdate.next();
         PlayerInput.clearKeyStatus();
-        let a = new Image();
-        a.src = './assets/Square.png';
-        Canvas._context.drawImage(a, 0, 0, 25, 25)
-        var myImg = Canvas._context.getImageData(0, 0, Canvas.canvasWidth, Canvas.canvasHeight);
-        let pix = myImg.data;
-        let n    = pix.length;
-
-         for (let i = 0; i < n; i += 4) { 
-             if (pix[i + 3] > 0) { 
-                 pix[i    ] = 255;       // red   - values 0 to 255
-                 pix[i + 1] = 255;       // green - values between 0 and 255
-                 pix[i + 2] = 0;       // blue  - values between 0 and 255
-                 pix[i + 3] = 1 * 255; // alpha in canvas from 0 to 255, instead between 0 and 1. 
-             } 
-         } 
-         Canvas._context.putImageData(myImg, 0, 0); 
         requestAnimationFrame(Canvas.updateCanvas);
     }
 
@@ -193,11 +179,24 @@ export abstract class Canvas {
 
         // Render Sprites
         Canvas._gameObjectList.forEach((gameObject) => {
-            let renderer = gameObject.getComponent(SpriteRenderer);
+            let renderer: SpriteRenderer = gameObject.getComponent(SpriteRenderer);
 
             if (renderer) {
-                renderer.sprite(renderer);
-            }
+                if (renderer.sprite instanceof Sprite){
+                    let w = Canvas.ppu * gameObject.transform.scale.x;
+                    let h = Canvas.ppu * gameObject.transform.scale.y;
+                    
+                    let x = Canvas.ppu * (gameObject.transform.position.x - 0.5);
+                    let y = -Canvas.ppu * (gameObject.transform.position.y + 0.5);
+                    
+                    x = x + (Canvas.ppu - w) / 2;
+                    y = y + (Canvas.ppu - h) / 2;
+    
+                    Canvas._context.drawImage(renderer.sprite.image, x, y, w, h)
+                } else {
+                    (renderer.sprite as SpriteShape).drawShape(renderer);
+                }
+            } 
         });
     }
 

@@ -1,7 +1,7 @@
 import { MonoBehaviour, Canvas, Time, PlayerInput, KeyCode, Vector2, SpriteRenderer } from "../../engine/qbcreates-js-engine";
 import { GameStateManager } from "./managers/game-state-manager.js";
-import { square } from "../../engine/sprite-renderer";
 import { Physics2d } from "../../engine/physics";
+import { squareSprite } from "src/app/engine/sprite-shape";
 
 export class TestFollow extends MonoBehaviour {
     target = null;
@@ -14,19 +14,19 @@ export class TestFollow extends MonoBehaviour {
         });
 
         this.animation.push((renderer) => {
-            square(renderer)
+            squareSprite.drawShape(renderer)
         });
         this.animation.push((renderer) => {
-            square(renderer)
+            squareSprite.drawShape(renderer)
         });
         this.animation.push((renderer) => {
-            square(renderer)
+            squareSprite.drawShape(renderer)
         });
         this.animation.push((renderer) => {
-            square(renderer)
+            squareSprite.drawShape(renderer)
         });
         this.animation.push((renderer) => {
-            square(renderer)
+            squareSprite.drawShape(renderer)
         });
     }
 
