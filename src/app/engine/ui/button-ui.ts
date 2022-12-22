@@ -2,7 +2,6 @@ import { Subject, Subscription } from "rxjs";
 import { BoxCollider } from "../box-collider";
 import { Canvas } from "../canvas";
 import { KeyCode, PlayerInput } from "../player-input";
-import { ComponentObject, ObjectBase } from "../q-object";
 import { Vector2 } from "../vector2";
 import { UIBehaviour } from "./ui-behaviour";
 
@@ -89,40 +88,5 @@ export class ButtonUI extends UIBehaviour {
                 this._clickEvent.next(false);
             }
         }
-    }
-}
-
-export class ButtonObject extends ObjectBase {
-    private _text: string = '';
-    private _textColor: string = '';
-    private _textSize: number = 30;
-    private _font: string = '';
-    private _bold: boolean = false;
-    private _buttonColor: string = '';
-    private _transparency: number = 1;
-
-    constructor(text: string, textColor : string, textSize: number, font: string, bold: boolean, buttonColor: string) {
-        super();
-        this._text = text;
-        this._textColor = textColor;
-        this._textSize = textSize;
-        this._font = font;
-        this._bold = bold;
-        this._buttonColor = buttonColor; 
-    }
-
-    public returnInterface(): ComponentObject {
-        let buttonUI: ComponentObject = {
-            component: ButtonUI,
-            properties: {
-                text: this._text,
-                textColor: this._textColor,
-                textSize: this._textSize,
-                font: this._font,
-                bold: this._bold,
-                buttonColor: this._buttonColor
-            }
-        }
-        return buttonUI;
     }
 }

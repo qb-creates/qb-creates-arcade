@@ -1,6 +1,6 @@
 import { Canvas } from "../canvas";
 import { GameObject } from "../game-object";
-import { ComponentObject, ObjectBase } from "../q-object";
+import { ComponentObject } from "../q-object";
 import { Vector2 } from "../vector2";
 import { UIBehaviour } from "./ui-behaviour";
 
@@ -32,14 +32,13 @@ export class LabelUI extends UIBehaviour {
     }
 }
 
-export class LabelObject extends ObjectBase{
+export class LabelObject {
     private _text: string = '';
     private _color: string = '';
     private _fontStyle: string = '';
     private _lineHeight: number = 0;
     
     constructor(text: string, color: string, fontStyle: string, lineHeight) {
-        super();
         this._text = text;
         this._color = color;
         this._fontStyle = fontStyle;

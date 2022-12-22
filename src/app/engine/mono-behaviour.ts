@@ -1,5 +1,5 @@
 import { Subscription } from "rxjs";
-import { ComponentObject, ObjectBase } from "./q-object";
+import { ComponentObject } from "./q-object";
 import { Time, Component, Canvas, GameObject, BoxCollider } from "./qbcreates-js-engine";
 
 export class MonoBehaviour extends Component {
@@ -72,11 +72,10 @@ export class MonoBehaviour extends Component {
 /**
  * 
  */
-export class MonoBehaviourObject extends ObjectBase {
+export class MonoBehaviourObject {
     private _scriptType: typeof Component = null;
 
     constructor(scriptType: typeof Component) {
-        super();
         this._scriptType = scriptType;
     }
 

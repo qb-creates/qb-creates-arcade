@@ -1,5 +1,6 @@
 import { GameObject, Vector2, Component, Transform, Canvas, MonoBehaviour, SpriteRenderer } from "./qbcreates-js-engine";
 import { Guid } from "guid-typescript";
+import { ComponentInterface } from "./component-interface";
 
 export class QObject {
     private _metaData: Guid = null;
@@ -139,19 +140,20 @@ export class QObject {
         });
 
         // Recursively create the components and add them to the current GameObject.
-        prefab.components.forEach((componentPrefab: ObjectBase) => {
+        prefab.components.forEach((componentPrefab: ComponentObject) => {
             // Get the component interface from the prefab.
-            let componentInterface = componentPrefab.returnInterface();
+            // let componentInterface = componentPrefab.returnInterface();
 
             // Create the component.
-            let component = gameObject.addComponent(componentInterface.component);
+            let component = gameObject.addComponent(componentPrefab.component);
 
             // Copy property values from the component interface over to the component.
-            for (var key in componentInterface.properties) {
-                if (gameObject[key] != 'undefined') {
-                    Reflect.set(component, key, componentInterface.properties[key])
-                }
-            }
+            // for (var key in componentInterface.properties) {
+            //     if (gameObject[key] != 'undefined') {
+            //         Reflect.set(component, key, componentInterface.properties[key])
+            //     }
+            // }
+            Object.assign(component, componentPrefab.properties)
         });
 
         // Add the gameObject to the canvas to be rendered.
@@ -170,20 +172,13 @@ export class QObject {
 /**
  * 
  */
-export abstract class ObjectBase {
-    abstract returnInterface(): ComponentObject;
-}
-
-/**
- * 
- */
 export interface Prefab {
     children: Prefab[],
     layer: number,
     objectName: string,
     position: Vector2,
     scale: Vector2,
-    components: ObjectBase[]
+    components: ComponentObject[]
 }
 
 /**
@@ -191,5 +186,5 @@ export interface Prefab {
  */
 export interface ComponentObject {
     component: typeof Component,
-    properties: {}
+    properties: ComponentInterface
 }
