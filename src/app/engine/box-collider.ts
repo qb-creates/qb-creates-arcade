@@ -97,7 +97,7 @@ export class BoxColliderObject extends ObjectBase {
     }
 
     public returnInterface(): ComponentObject {
-        let spriteRenderer: ComponentObject = {
+        let boxCollider: ComponentObject = {
             component: BoxCollider,
             properties: {
                 position: this._position,
@@ -105,7 +105,7 @@ export class BoxColliderObject extends ObjectBase {
             }
         }
 
-        return spriteRenderer;
+        return boxCollider;
     }
 }
 

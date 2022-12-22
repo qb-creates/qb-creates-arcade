@@ -31,18 +31,18 @@ export class MonoBehaviour extends Component {
         });
     }
 
-    destroy() {
+    destroy(): void {
         this._canvasUpdateSubscription.unsubscribe();
         clearInterval(this._fixedUpdateInterval);
     }
 
-    awake() {
+    awake(): void {
     }
 
-    start() {
+    start(): void {
     }
 
-    update() {
+    update(): void {
     }
 
     fixedUpdate() {
@@ -72,7 +72,7 @@ export class MonoBehaviour extends Component {
 /**
  * 
  */
-export class MonoBehaviourObject extends ObjectBase{
+export class MonoBehaviourObject extends ObjectBase {
     private _scriptType: typeof Component = null;
 
     constructor(scriptType: typeof Component) {

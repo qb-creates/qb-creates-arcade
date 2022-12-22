@@ -1,14 +1,13 @@
 import { Canvas } from "../canvas";
 import { GameObject } from "../game-object";
 import { ComponentObject, ObjectBase } from "../q-object";
-import { Vector2 } from "../vector2";
 import { UIBehaviour } from "./ui-behaviour";
 
 export class LabelUI extends UIBehaviour {
-    text: string = '';
-    color: string = '';
-    fontStyle: string = '';
-    lineHeight: number = 0;
+    public text: string = '';
+    public color: string = '';
+    public fontStyle: string = '';
+    public lineHeight: number = 0;
 
     constructor(gameObject: GameObject) {
         super(gameObject);

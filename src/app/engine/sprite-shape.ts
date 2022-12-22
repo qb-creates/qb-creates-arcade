@@ -8,22 +8,42 @@ export interface SpriteShape {
 
 export let squareSprite: SpriteShape = {
     drawShape: function (renderer: SpriteRenderer) {
-        let x: number = renderer.transform.position.x;
-        let y: number = renderer.transform.position.y;
+
         let color: string = renderer.color;
         let borderColor: string = renderer.color
         let scale: Vector2 = renderer.transform.scale;
-    
+
         let w = Canvas.ppu * scale.x;
         let h = Canvas.ppu * scale.y;
-        
-        x = (Canvas.ppu * x) + ((Canvas.ppu - w) / 2);
-        y = -1 * (Canvas.ppu * y) + ((Canvas.ppu - h) / 2);
-    
+
+        let x = Canvas.ppu * (renderer.transform.position.x - 0.5);
+        let y = -Canvas.ppu * (renderer.transform.position.y + 0.5);
+
+        x = x + (Canvas.ppu - w) / 2;
+        y = y + (Canvas.ppu - h) / 2;
+
+        // let w = Canvas.ppu * scale.x;
+        // let h = Canvas.ppu * scale.y;
+
+        // let x: number = (Canvas.ppu * renderer.transform.position.x) + ((Canvas.ppu - w) / 2);
+        // let y: number = -(Canvas.ppu * renderer.transform.position.y) + ((Canvas.ppu - h) / 2);
+
+        // x = Canvas.ppu * (renderer.transform.position.x - 0.5);
+        // y = -Canvas.ppu * (renderer.transform.position.y + 0.5);
+
+        // let w = Canvas.ppu * gameObject.transform.scale.x;
+        // let h = Canvas.ppu * gameObject.transform.scale.y;
+
+        // let x = Canvas.ppu * (gameObject.transform.position.x - 0.5);
+        // let y = -Canvas.ppu * (gameObject.transform.position.y + 0.5);
+
+        // x = x + (Canvas.ppu - w) / 2;
+        // y = y + (Canvas.ppu - h) / 2;
+
         Canvas.context.fillStyle = color;
         Canvas.context.strokeStyle = borderColor;
         Canvas.context.beginPath();
-        Canvas.context.roundRect(x - (Canvas.ppu / 2), y - (Canvas.ppu / 2), w, h, 5);
+        Canvas.context.roundRect(x, y, w, h, 5);
         Canvas.context.stroke();
         Canvas.context.fill();
     }

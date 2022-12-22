@@ -8,6 +8,7 @@ import { LabelObject } from "src/app/engine/ui/label-ui";
 import { MonoBehaviourObject } from "src/app/engine/mono-behaviour";
 import { BoxColliderObject } from "src/app/engine/box-collider";
 import { squareSprite } from "src/app/engine/sprite-shape";
+import { ButtonObject } from "src/app/engine/ui/button-ui";
 
 export let snake: Prefab = {
     children: [
@@ -44,7 +45,8 @@ export let snake: Prefab = {
             components: [
                 new BoxColliderObject(new Vector2(2, 0), new Vector2(1, 1)),
                 new SpriteRendererObject(snakeHeadColor, squareSprite),
-                new MonoBehaviourObject(SnakeCollision)
+                new MonoBehaviourObject(SnakeCollision),
+                new ButtonObject('Play', 'white', 'Bold 40px Times New Roman', 35)
             ]
         }
     ],

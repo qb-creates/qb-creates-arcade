@@ -141,7 +141,7 @@ export abstract class Canvas {
         }
     }
 
-    private static updateCanvas = (timestamp) => {
+    private static updateCanvas = (timestamp: number) => {
         Canvas._context.clearRect(-Canvas._canvas.width / 2, -Canvas._canvas.height / 2, Canvas._canvas.width, Canvas._canvas.height);
         Canvas.renderSprites();
         Canvas.collisionCheck();
@@ -238,7 +238,7 @@ export abstract class Canvas {
 
     private static renderFPS() {
         Canvas.context.fillStyle = 'green';
-        Canvas.context.font = '30px Arial';
+        Canvas.context.font = 'bold 20px Arial';
 
         let x = (20 * Canvas.ppu);
         let y = (-1 * 13 * Canvas.ppu);
