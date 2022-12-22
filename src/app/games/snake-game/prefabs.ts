@@ -80,11 +80,17 @@ export let playButton: Prefab = {
     children: [],
     layer: 0,
     objectName: "playButton",
-    position: new Vector2(0, 8),
-    scale: new Vector2(3.8, 2),
+    position: new Vector2(0, 0),
+    scale: new Vector2(3.8, 4),
     components: [
-        new ButtonObject('red'),
-        new LabelObject('Play', 'white', 'Bold 40px Monospace', 35),
+        new ButtonObject(
+            'Play\nNow',
+            'white',
+            30,
+            'Monospace',
+            true,
+            'blue'
+        ),
         new MonoBehaviourObject(PlayButton)
     ]
 }

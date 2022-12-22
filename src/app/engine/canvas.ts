@@ -87,8 +87,12 @@ export abstract class Canvas {
         Canvas._canvas.width = canvasWidth;
         Canvas._canvas.height = canvasHeight;
 
-        // Makes it so that (0, 0) is the center of our canvas
+        // Makes it so that (0, 0) is the center of our canvas.
         Canvas._context.translate(canvasWidth / 2, canvasHeight / 2);
+
+        // Globally centers all text on the canvas.
+        Canvas.context.textBaseline = 'middle';
+        Canvas.context.textAlign = "center";
     }
 
     /**
@@ -252,7 +256,7 @@ export abstract class Canvas {
     private static __ctor = (() => {
         Canvas._canvas = <HTMLCanvasElement>document.getElementById('canvas');
         Canvas._context = Canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
-
+        
         // Will be used to track our mouse position on the canvas.
         addEventListener("mousemove", function (evt) {
             let rect = Canvas._canvas.getBoundingClientRect();

@@ -24,8 +24,8 @@ export class LabelUI extends UIBehaviour {
         textLines.forEach((line, index) => {
             let textInfo = Canvas.context.measureText(line);
             let textHeight = (textInfo.actualBoundingBoxAscent + textInfo.actualBoundingBoxDescent);
-            let x = ((this.transform.position.x + this.positionOffset.x) * Canvas.ppu) - (textInfo.width / 2) ;
-            let y = (-1 * (this.transform.position.y + this.positionOffset.y) * Canvas.ppu) + (index * this.lineHeight) + (textHeight / 2);
+            let x = ((this.transform.position.x + this.positionOffset.x) * Canvas.ppu);
+            let y = (-1 * (this.transform.position.y + this.positionOffset.y) * Canvas.ppu) + (index * this.lineHeight);
 
             Canvas.context.fillText(line, x, y);
         });

@@ -7,8 +7,15 @@ import { Vector2 } from "../vector2";
 import { UIBehaviour } from "./ui-behaviour";
 
 export class ButtonUI extends UIBehaviour {
-    public color: string = '';
+    public buttonColor: string = 'gray';
     public transparency: number = 1;
+    public text: string = '';
+    public textColor: string = 'white';
+    public bold: boolean = false;
+    public textSize: number = 30;
+    public font: string = 'Monospace';
+    public positionOffset: Vector2 = new Vector2(0, 0);
+    private _lineHeight: number = 30;
     private _clickEvent: Subject<boolean> = new Subject<boolean>();
 
     get clickEvent() {
@@ -22,8 +29,13 @@ export class ButtonUI extends UIBehaviour {
     }
 
     public render(): void {
-        let color: string = this.color;
-        let borderColor: string = this.color;
+        this.renderBox();
+        this.renderText();
+    }
+
+    private renderBox() {
+        let color: string = this.buttonColor;
+        let borderColor: string = this.buttonColor;
         let scale: Vector2 = this.transform.scale;
 
         let w = Canvas.ppu * scale.x;
@@ -34,7 +46,6 @@ export class ButtonUI extends UIBehaviour {
 
         x = x + (Canvas.ppu - w) / 2;
         y = y + (Canvas.ppu - h) / 2;
-
         Canvas.context.fillStyle = color;
         Canvas.context.strokeStyle = borderColor;
         Canvas.context.globalAlpha = this.transparency;
@@ -42,6 +53,20 @@ export class ButtonUI extends UIBehaviour {
         Canvas.context.roundRect(x, y, w, h, 5);
         Canvas.context.stroke();
         Canvas.context.fill();
+    }
+
+    private renderText() {
+        Canvas.context.fillStyle = this.textColor;
+        Canvas.context.font = `${this.bold ? 'bold': ''} ${this.textSize}px ${this.font}`;
+
+        let textLines = this.text.split('\n');
+        let lineHeight = this.textSize;
+        let verticalCenterOffset = (textLines.length  - 1) * lineHeight / 2; 
+        textLines.forEach((line, index) => {
+            let x = (this.transform.position.x + this.positionOffset.x) * Canvas.ppu;
+            let y = (-1 * (this.transform.position.y + this.positionOffset.y) * Canvas.ppu) + (index * lineHeight) - verticalCenterOffset;
+            Canvas.context.fillText(line, x, y);
+        });
     }
 
     private checkForButtonClick() {
@@ -68,21 +93,36 @@ export class ButtonUI extends UIBehaviour {
 }
 
 export class ButtonObject extends ObjectBase {
-    private _color: string = '';
+    private _text: string = '';
+    private _textColor: string = '';
+    private _textSize: number = 30;
+    private _font: string = '';
+    private _bold: boolean = false;
+    private _buttonColor: string = '';
+    private _transparency: number = 1;
 
-    constructor(color: string) {
+    constructor(text: string, textColor : string, textSize: number, font: string, bold: boolean, buttonColor: string) {
         super();
-        this._color = color;
+        this._text = text;
+        this._textColor = textColor;
+        this._textSize = textSize;
+        this._font = font;
+        this._bold = bold;
+        this._buttonColor = buttonColor; 
     }
 
     public returnInterface(): ComponentObject {
         let buttonUI: ComponentObject = {
             component: ButtonUI,
             properties: {
-                color: this._color
+                text: this._text,
+                textColor: this._textColor,
+                textSize: this._textSize,
+                font: this._font,
+                bold: this._bold,
+                buttonColor: this._buttonColor
             }
         }
-
         return buttonUI;
     }
 }

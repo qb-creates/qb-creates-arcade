@@ -22,8 +22,5 @@ export class PlayButton extends MonoBehaviour {
                 GameStateManager.onGameStart();
             }
         });
-
-        let label = this.gameObject.getComponent(LabelUI);
-        label.positionOffset = new Vector2(0, .15);
     }
 }
