@@ -7,10 +7,7 @@ import { Vector2 } from "../vector2";
 import { UIBehaviour } from "./ui-behaviour";
 
 export class ButtonUI extends UIBehaviour {
-    public text: string = '';
     public color: string = '';
-    public fontStyle: string = '';
-    public lineHeight: number = 0;
     private _clickEvent: Subject<boolean> = new Subject<boolean>();
 
     get clickEvent() {
@@ -18,23 +15,31 @@ export class ButtonUI extends UIBehaviour {
     }
 
     update(): void {
-        this.checkForButtonClick();
+        if (this.gameObject.isActive) {
+            this.checkForButtonClick();
+        }
     }
 
     public render(): void {
-        Canvas.context.fillStyle = this.color;
-        Canvas.context.font = this.fontStyle;
+        let color: string = this.color;
+        let borderColor: string = this.color;
+        let scale: Vector2 = this.transform.scale;
 
-        let textLines = this.text.split('\n');
-        textLines.forEach((line, index) => {
-            let textInfo = Canvas.context.measureText(line);
-            let textHeight = (textInfo.actualBoundingBoxAscent + textInfo.actualBoundingBoxDescent)
-            let x = this.transform.position.x - (textInfo.width / 2) ;
-            let y = (-1 * this.transform.position.y * Canvas.ppu) + (index * this.lineHeight) + (textHeight / 2);
+        let w = Canvas.ppu * scale.x;
+        let h = Canvas.ppu * scale.y;
 
-            Canvas.context.fillText(line, x, y);
-        });
-        // Canvas.context.fillRect()
+        let x = Canvas.ppu * (this.transform.position.x - 0.5);
+        let y = -Canvas.ppu * (this.transform.position.y + 0.5);
+
+        x = x + (Canvas.ppu - w) / 2;
+        y = y + (Canvas.ppu - h) / 2;
+        
+        Canvas.context.fillStyle = color;
+        Canvas.context.strokeStyle = borderColor;
+        Canvas.context.beginPath();
+        Canvas.context.roundRect(x, y, w, h, 5);
+        Canvas.context.stroke();
+        Canvas.context.fill();
     }
 
     private checkForButtonClick() {
@@ -53,7 +58,6 @@ export class ButtonUI extends UIBehaviour {
         if (mousePosition.y >= r1.y && mousePosition.y <= l1.y && mousePosition.x >= l1.x && mousePosition.x <= r1.x) {
             if (PlayerInput.getKeyDown(KeyCode[0])) {
                 this._clickEvent.next(true);
-                console.log('yes')
             } else if (PlayerInput.getKeyUp(KeyCode[0])) {
                 this._clickEvent.next(false);
             }
@@ -62,27 +66,18 @@ export class ButtonUI extends UIBehaviour {
 }
 
 export class ButtonObject extends ObjectBase {
-    private _text: string = '';
     private _color: string = '';
-    private _fontStyle: string = '';
-    private _lineHeight: number = 0;
-    
-    constructor(text: string, color: string, fontStyle: string, lineHeight) {
+
+    constructor(color: string) {
         super();
-        this._text = text;
         this._color = color;
-        this._fontStyle = fontStyle;
-        this._lineHeight = lineHeight;
     }
 
     public returnInterface(): ComponentObject {
         let buttonUI: ComponentObject = {
             component: ButtonUI,
             properties: {
-                text: this._text,
-                color: this._color,
-                fontStyle: this._fontStyle,
-                lineHeight: this._lineHeight
+                color: this._color
             }
         }
 

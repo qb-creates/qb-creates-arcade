@@ -21,25 +21,7 @@ export let squareSprite: SpriteShape = {
 
         x = x + (Canvas.ppu - w) / 2;
         y = y + (Canvas.ppu - h) / 2;
-
-        // let w = Canvas.ppu * scale.x;
-        // let h = Canvas.ppu * scale.y;
-
-        // let x: number = (Canvas.ppu * renderer.transform.position.x) + ((Canvas.ppu - w) / 2);
-        // let y: number = -(Canvas.ppu * renderer.transform.position.y) + ((Canvas.ppu - h) / 2);
-
-        // x = Canvas.ppu * (renderer.transform.position.x - 0.5);
-        // y = -Canvas.ppu * (renderer.transform.position.y + 0.5);
-
-        // let w = Canvas.ppu * gameObject.transform.scale.x;
-        // let h = Canvas.ppu * gameObject.transform.scale.y;
-
-        // let x = Canvas.ppu * (gameObject.transform.position.x - 0.5);
-        // let y = -Canvas.ppu * (gameObject.transform.position.y + 0.5);
-
-        // x = x + (Canvas.ppu - w) / 2;
-        // y = y + (Canvas.ppu - h) / 2;
-
+        
         Canvas.context.fillStyle = color;
         Canvas.context.strokeStyle = borderColor;
         Canvas.context.beginPath();

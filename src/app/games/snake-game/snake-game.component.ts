@@ -35,13 +35,12 @@ export class SnakeGameComponent implements OnInit {
     let enemy = QObject.instantiate(prefab.enemy);
     enemy.getComponent(TestFollow).target = player;
 
+    QObject.instantiate(prefab.playButton);
+
     ScoreManager.scoreText =  QObject.instantiate(prefab.scoreLabel).getComponent(LabelUI);
     let enemy2 = QObject.instantiate(prefab.enemy);
     enemy2.transform.position = new Vector2(5, -5);
     enemy2.getComponent(TestFollow).target = player;
-  }
-  onPlay() {
-    GameStateManager.onGameStart();
   }
 }
 

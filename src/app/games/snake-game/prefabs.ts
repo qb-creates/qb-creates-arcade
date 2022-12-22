@@ -9,6 +9,8 @@ import { MonoBehaviourObject } from "src/app/engine/mono-behaviour";
 import { BoxColliderObject } from "src/app/engine/box-collider";
 import { squareSprite } from "src/app/engine/sprite-shape";
 import { ButtonObject } from "src/app/engine/ui/button-ui";
+import { GameStateManager } from "./managers/game-state-manager";
+import { PlayButton } from "./ui/play-button";
 
 export let snake: Prefab = {
     children: [
@@ -45,8 +47,7 @@ export let snake: Prefab = {
             components: [
                 new BoxColliderObject(new Vector2(2, 0), new Vector2(1, 1)),
                 new SpriteRendererObject(snakeHeadColor, squareSprite),
-                new MonoBehaviourObject(SnakeCollision),
-                new ButtonObject('Play', 'white', 'Bold 40px Times New Roman', 35)
+                new MonoBehaviourObject(SnakeCollision)
             ]
         }
     ],
@@ -71,6 +72,19 @@ export let apple: Prefab = {
         new SpriteRendererObject('red', squareSprite),
         new BoxColliderObject(new Vector2(5, 5), new Vector2(.4, .4)),
         new MonoBehaviourObject(AppleBehaviour),
+    ]
+}
+
+export let playButton: Prefab = {
+    children: [],
+    layer: 0,
+    objectName: "playButton",
+    position: new Vector2(0, 0),
+    scale: new Vector2(3.3, 2),
+    components: [
+        new ButtonObject('red'),
+        new LabelObject('Play', 'white', 'Bold 40px Times New Roman', 35),
+        new MonoBehaviourObject(PlayButton)
     ]
 }
 

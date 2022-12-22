@@ -231,7 +231,9 @@ export abstract class Canvas {
         Canvas._gameObjectList.forEach(gameObject => {
             let uiList: UIBehaviour[] = gameObject.getComponents(UIBehaviour);
             uiList.forEach(ui => {
-                ui.render();
+                if (gameObject.isActive) {
+                    ui.render();
+                }
             });
         })
     }

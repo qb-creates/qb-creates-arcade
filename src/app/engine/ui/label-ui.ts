@@ -1,6 +1,7 @@
 import { Canvas } from "../canvas";
 import { GameObject } from "../game-object";
 import { ComponentObject, ObjectBase } from "../q-object";
+import { Vector2 } from "../vector2";
 import { UIBehaviour } from "./ui-behaviour";
 
 export class LabelUI extends UIBehaviour {
@@ -8,11 +9,15 @@ export class LabelUI extends UIBehaviour {
     public color: string = '';
     public fontStyle: string = '';
     public lineHeight: number = 0;
+    public positionOffset: Vector2 = new Vector2(0, 0);
 
     constructor(gameObject: GameObject) {
         super(gameObject);
     }
 
+    awake(): void {
+        this.positionOffset = new Vector2(0, .15)
+    }
     public render(): void {
         Canvas.context.fillStyle = this.color;
         Canvas.context.font = this.fontStyle;
@@ -20,9 +25,9 @@ export class LabelUI extends UIBehaviour {
         let textLines = this.text.split('\n');
         textLines.forEach((line, index) => {
             let textInfo = Canvas.context.measureText(line);
-            let textHeight = (textInfo.actualBoundingBoxAscent + textInfo.actualBoundingBoxDescent)
-            let x = this.transform.position.x - (textInfo.width / 2) ;
-            let y = (-1 * this.transform.position.y * Canvas.ppu) + (index * this.lineHeight) + (textHeight / 2);
+            let textHeight = (textInfo.actualBoundingBoxAscent + textInfo.actualBoundingBoxDescent);
+            let x = ((this.transform.position.x + this.positionOffset.x) * Canvas.ppu) - (textInfo.width / 2) ;
+            let y = (-1 * (this.transform.position.y + this.positionOffset.y) * Canvas.ppu) + (index * this.lineHeight) + (textHeight / 2);
 
             Canvas.context.fillText(line, x, y);
         });
