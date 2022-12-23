@@ -1,3 +1,4 @@
+import { Guid } from "guid-typescript";
 import { Subscription } from "rxjs";
 import { ComponentObject } from "./q-object";
 import { Time, Component, Canvas, GameObject, BoxCollider } from "./qbcreates-js-engine";
@@ -48,10 +49,10 @@ export class MonoBehaviour extends Component {
     fixedUpdate() {
     }
 
-    onTriggerEnter(colliders: BoxCollider[]) {
+    onTriggerEnter(colliders: Map<Guid, BoxCollider>) {
     }
 
-    onTriggerExit(colliders: BoxCollider[]) {
+    onTriggerExit(colliders: Map<Guid, BoxCollider>) {
     }
 
     private CheckForDestroyedReferences() {

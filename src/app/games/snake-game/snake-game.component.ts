@@ -17,31 +17,31 @@ export class SnakeGameComponent implements OnInit {
 
   ngOnInit() {
     Canvas.configureCanvas(1280, 720, 25);
-    // QObject.instantiate(prefab.background);
-    // QObject.instantiate(prefab.apple);
-    // let border = QObject.instantiate(prefab.verticalBorder);
-    // border.transform.position = new Vector2(-10, 0);
+    QObject.instantiate(prefab.background);
+    QObject.instantiate(prefab.apple);
+    let border = QObject.instantiate(prefab.verticalBorder);
+    border.transform.position = new Vector2(-10, 0);
     
-    // border = QObject.instantiate(prefab.verticalBorder);
-    // border.transform.position = new Vector2(10, 0);
+    border = QObject.instantiate(prefab.verticalBorder);
+    border.transform.position = new Vector2(10, 0);
 
-    // border = QObject.instantiate(prefab.horizontalBorder);
-    // border.transform.position = new Vector2(0, 10);
+    border = QObject.instantiate(prefab.horizontalBorder);
+    border.transform.position = new Vector2(0, 10);
 
-    // border = QObject.instantiate(prefab.horizontalBorder);
-    // border.transform.position = new Vector2(0, -10);
+    border = QObject.instantiate(prefab.horizontalBorder);
+    border.transform.position = new Vector2(0, -10);
 
     let player = QObject.instantiate(snake);
   
-    // let enemy = QObject.instantiate(prefab.enemy);
-    // enemy.getComponent(TestFollow).target = player;
+    let enemy = QObject.instantiate(prefab.enemy);
+    enemy.getComponent(TestFollow).target = player;
 
     QObject.instantiate(prefab.playButton);
 
-    // ScoreManager.scoreText =  QObject.instantiate(prefab.scoreLabel).getComponent(LabelUI);
-    // let enemy2 = QObject.instantiate(prefab.enemy);
-    // enemy2.transform.position = new Vector2(5, -5);
-    // enemy2.getComponent(TestFollow).target = player;
+    ScoreManager.scoreText =  QObject.instantiate(prefab.scoreLabel).getComponent(LabelUI);
+    let enemy2 = QObject.instantiate(prefab.enemy);
+    enemy2.transform.position = new Vector2(5, -5);
+    enemy2.getComponent(TestFollow).target = player;
   }
 }
 

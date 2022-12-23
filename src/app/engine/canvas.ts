@@ -148,13 +148,13 @@ export abstract class Canvas {
     private static updateCanvas = (timestamp: number) => {
         Canvas._context.clearRect(-Canvas._canvas.width / 2, -Canvas._canvas.height / 2, Canvas._canvas.width, Canvas._canvas.height);
         Canvas.renderSprites();
-        Canvas.collisionCheck();
-        Canvas.drawGrid();
         Canvas.renderUI();
+        Canvas.drawGrid();
         Canvas.renderFPS();
         Canvas.deltaTime = (timestamp - Canvas._previousTimestamp);
         Canvas._previousTimestamp = timestamp;
         Canvas.canvasUpdate.next();
+        Canvas.collisionCheck();
         PlayerInput.clearKeyStatus();
         requestAnimationFrame(Canvas.updateCanvas);
     }

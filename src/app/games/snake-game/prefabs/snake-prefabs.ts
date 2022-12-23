@@ -21,7 +21,7 @@ export let snake: Prefab = {
                     component: BoxCollider,
                     properties: <BoxColliderInterface> {
                         position: new Vector2(-1, 0),
-                        scale: new Vector2(0, 0),
+                        scale: new Vector2(.6, .6),
                     }
                 },
                 {
@@ -84,6 +84,10 @@ export let snake: Prefab = {
                         color: snakeHeadColor,
                         sprite: squareSprite,
                     }
+                },
+                {
+                    component: SnakeCollision,
+                    properties: {}
                 }
             ]
         }

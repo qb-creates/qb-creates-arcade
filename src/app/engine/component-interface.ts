@@ -22,3 +22,11 @@ export interface ButtonInterface extends ComponentInterface{
     bold: boolean,
     buttonColor: string
 }
+
+export interface LabelInterface extends ComponentInterface{
+    text: string,
+    textColor: string,
+    textSize: number,
+    font: string,
+    bold: boolean,
+}

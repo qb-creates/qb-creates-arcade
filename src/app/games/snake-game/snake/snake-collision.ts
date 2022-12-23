@@ -1,3 +1,4 @@
+import { Guid } from "guid-typescript";
 import { MonoBehaviour, PlayerInput, KeyCode, Canvas, BoxCollider, QObject, Time } from "../../../engine/qbcreates-js-engine";
 import { GameStateManager } from "../managers/game-state-manager";
 
@@ -26,8 +27,11 @@ export class SnakeCollision extends MonoBehaviour {
             this.die = false;
         }
     }
-    onTriggerEnter(colliders: BoxCollider[]) {
+    onTriggerEnter(colliders: Map<Guid, BoxCollider>) {
+        console.log('hit');
+        console.log(colliders);
         colliders.forEach(collider => {
+            console.log(collider);
             if (collider.gameObject.objectName.includes('snake')) {
                 if (this.gameObject.parent.children[this.gameObject.parent.children.length - 1] == this.gameObject) {
                     GameStateManager.onGameOver();

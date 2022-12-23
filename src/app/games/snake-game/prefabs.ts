@@ -6,29 +6,45 @@ import { ButtonUI } from "src/app/engine/ui/button-ui";
 
 import { PlayButton } from "./ui/play-button";
 
-import { ButtonInterface, BoxColliderInterface, SpriteRendererInterface } from "src/app/engine/component-interface";
+import { ButtonInterface, BoxColliderInterface, SpriteRendererInterface, LabelInterface } from "src/app/engine/component-interface";
+import { TestFollow } from "./test-follow";
+import { LabelUI } from "src/app/engine/ui/label-ui";
+import { AppleBehaviour } from "./apple/apple-behaviour";
 
-
-
-// export let apple: Prefab = {
-//     children: [],
-//     layer: 1,
-//     objectName: "apple",
-//     position: new Vector2(5, 5),
-//     scale: new Vector2(.4, .4),
-//     components: [
-//         new SpriteRendererObject('red', squareSprite),
-//         new BoxColliderObject(new Vector2(5, 5), new Vector2(.4, .4)),
-//         new MonoBehaviourObject(AppleBehaviour),
-//     ]
-// }
+export let apple: Prefab = {
+    children: [],
+    layer: 1,
+    objectName: "apple",
+    position: new Vector2(5, 5),
+    scale: new Vector2(.4, .4),
+    components: [
+        {
+            component: SpriteRenderer,
+            properties: <SpriteRendererInterface>{
+                color: 'red',
+                sprite: squareSprite,
+            }
+        },
+        {
+            component: BoxCollider,
+            properties: <BoxColliderInterface>{
+                position: new Vector2(5, 5),
+                scale: new Vector2(.4, .4),
+            }
+        },
+        {
+            component: AppleBehaviour,
+            properties: {}
+        }
+    ]
+}
 
 export let playButton: Prefab = {
     children: [],
     layer: 0,
     objectName: "playButton",
-    position: new Vector2(0, 0),
-    scale: new Vector2(3.8, 4),
+    position: new Vector2(0, 8),
+    scale: new Vector2(3.8, 2),
     components: [
         {
             component: PlayButton,
@@ -37,8 +53,8 @@ export let playButton: Prefab = {
         },
         {
             component: ButtonUI,
-            properties: <ButtonInterface> {
-                text: 'Play\nNow',
+            properties: <ButtonInterface>{
+                text: 'Play',
                 font: 'Monospace',
                 textSize: 30,
                 textColor: 'white',
@@ -49,66 +65,115 @@ export let playButton: Prefab = {
     ]
 }
 
-// export let scoreLabel: Prefab = {
-//     children: [],
-//     layer: 0,
-//     objectName: 'Score Label',
-//     position: new Vector2(0, 13),
-//     scale: new Vector2(1, 1),
-//     components: [
-//         new LabelObject('Score\n0', 'white', 'Bold 40px Monospace', 35)
-//     ]
-// }
+export let scoreLabel: Prefab = {
+    children: [],
+    layer: 0,
+    objectName: 'Score Label',
+    position: new Vector2(0, 12.5),
+    scale: new Vector2(1, 1),
+    components: [
+        {
+            component: LabelUI,
+            properties: <LabelInterface>{
+                text: 'Score\n0',
+                font: 'Monospace',
+                textSize: 40,
+                textColor: 'white',
+                bold: true
+            }
+        }
+    ]
+}
 
-// export let enemy: Prefab = {
-//     children: [],
-//     layer: 2,
-//     objectName: "enemy",
-//     position: new Vector2(-5, 5),
-//     scale: new Vector2(1, 1),
-//     components: [
-//         new SpriteRendererObject('red', squareSprite),
-//         new BoxColliderObject(new Vector2(-5, 5), new Vector2(3, 3)),
-//         new MonoBehaviourObject(TestFollow)
-//     ]
-// }
+export let enemy: Prefab = {
+    children: [],
+    layer: 2,
+    objectName: "enemy",
+    position: new Vector2(-5, 5),
+    scale: new Vector2(1, 1),
+    components: [
+        {
+            component: SpriteRenderer,
+            properties: <SpriteRendererInterface>{
+                color: 'red',
+                sprite: squareSprite,
+            }
+        },
+        {
+            component: BoxCollider,
+            properties: <BoxColliderInterface>{
+                position: new Vector2(-5, 5),
+                scale: new Vector2(3, 3),
+            }
+        },
+        {
+            component: TestFollow,
+            properties: {}
+        }
+    ]
+}
 
-// export let background: Prefab = {
-//     children: [],
-//     layer: 0,
-//     objectName: "background",
-//     position: new Vector2(0, 0),
-//     scale: new Vector2(19.5, 19.5),
-//     components: [
-//         new SpriteRendererObject('#1E1E1E', squareSprite)
-//     ]
-// }
+export let background: Prefab = {
+    children: [],
+    layer: 0,
+    objectName: "background",
+    position: new Vector2(0, 0),
+    scale: new Vector2(19.5, 19.5),
+    components: [
+        {
+            component: SpriteRenderer,
+            properties: <SpriteRendererInterface>{
+                color: '#1E1E1E',
+                sprite: squareSprite,
+            }
+        }
+    ]
+}
 
-// export let verticalBorder: Prefab = {
-//     children: [],
-//     layer: 0,
-//     objectName: "border",
-//     position: new Vector2(0, 0),
-//     scale: new Vector2(.5, 20),
-//     components: [
-//         new SpriteRendererObject('white', squareSprite),
-//         new BoxColliderObject(new Vector2(0, 0), new Vector2(.3, 19))
-//     ]
-// }
+export let verticalBorder: Prefab = {
+    children: [],
+    layer: 0,
+    objectName: "border",
+    position: new Vector2(0, 0),
+    scale: new Vector2(.5, 20),
+    components: [
+        {
+            component: SpriteRenderer,
+            properties: <SpriteRendererInterface>{
+                color: 'white',
+                sprite: squareSprite,
+            }
+        },
+        {
+            component: BoxCollider,
+            properties: <BoxColliderInterface>{
+                position: new Vector2(0, 0),
+                scale: new Vector2(.3, 19),
+            }
+        }
+    ]
+}
 
-// export let horizontalBorder: Prefab = {
-//     children: [],
-//     layer: 0,
-//     objectName: "border",
-//     position: new Vector2(0, 0),
-//     scale: new Vector2(20.5, .5),
-//     components: [
-//         new SpriteRendererObject('white', squareSprite),
-//         new BoxColliderObject(new Vector2(0, 0), new Vector2(19, .3))
-//     ]
-// }
-
-// let a = Object.assign(new ButtonObject(), <Buttonsss>{
-    
-// });
-
+export let horizontalBorder: Prefab = {
+    children: [],
+    layer: 0,
+    objectName: "border",
+    position: new Vector2(0, 0),
+    scale: new Vector2(20.5, .5),
+    components: [
+        {
+            component: SpriteRenderer,
+            properties: <SpriteRendererInterface>{
+                color: 'white',
+                sprite: squareSprite,
+            }
+        },
+        {
+            component: BoxCollider,
+            properties: <BoxColliderInterface>{
+                position: new Vector2(0, 0),
+                scale: new Vector2(19, .3),
+            }
+        }
+    ]
+}

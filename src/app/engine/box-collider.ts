@@ -1,3 +1,4 @@
+import { Guid } from "guid-typescript";
 import { ComponentObject } from "./q-object";
 import { Canvas, Component, GameObject, Vector2 } from "./qbcreates-js-engine";
 
@@ -5,7 +6,7 @@ export class BoxCollider extends Component {
     public position: Vector2 = new Vector2(0, 0);
     public scale: Vector2 = new Vector2(1, 1);
     private _render = null;
-    private _collisionList = new Map();
+    private _collisionList: Map<Guid, BoxCollider> = new Map();
     private _previousListCount: number = 0;
 
     public get render() {
@@ -40,9 +41,12 @@ export class BoxCollider extends Component {
         // Get the bottom right coordinates of the box
         let l2 = new Vector2((collider.position.x - .5) - (collider.scale.x / 2), (collider.position.y - .5) + (collider.scale.y / 2));
         let r2 = new Vector2((collider.position.x - .5) + (collider.scale.x / 2), (collider.position.y - .5) - (collider.scale.y / 2));
-
+    
         // if rectangle has area 0, no overlap
         if ((l1.x == r1.x || l1.y == r1.y || r2.x == l2.x || l2.y == r2.y)) {
+            if (this.gameObject.objectName.includes('rightBorder') && this.gameObject.transform.position.x == 10 && collider.gameObject.objectName.includes('rightBorder')) {
+                // console.log('sdfd');
+            }
             if (this._collisionList.has(collider.metaData)) {
                 this._collisionList.delete(collider.metaData);
             }
@@ -51,6 +55,9 @@ export class BoxCollider extends Component {
 
         // If one rectangle is on left side of other
         if (l1.x > r2.x || l2.x > r1.x) {
+            if (this.gameObject.objectName.includes('snake') && this.gameObject.transform.position.x == 10 && collider.gameObject.objectName.includes('rightBorder')) {
+                // console.log('sdfd');
+            }
             if (this._collisionList.has(collider.metaData)) {
                 this._collisionList.delete(collider.metaData);
             }
@@ -59,12 +66,18 @@ export class BoxCollider extends Component {
 
         // If one rectangle is above the other
         if (r1.y > l2.y || r2.y > l1.y) {
+            if (this.gameObject.objectName.includes('snake') && this.gameObject.transform.position.x == 10 && collider.gameObject.objectName.includes('rightBorder')) {
+                // console.log('sdfd');
+            }
             if (this._collisionList.has(collider.metaData)) {
                 this._collisionList.delete(collider.metaData);
             }
             return false;
         }
 
+        if (this.gameObject.objectName.includes('snake') && this.gameObject.transform.position.x == 10 && collider.gameObject.objectName.includes('rightBorder')) {
+            // console.log('sdfd');
+        }
         if (!this._collisionList.has(collider.metaData)) {
             this._collisionList.set(collider.metaData, collider);
         }

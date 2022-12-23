@@ -32,7 +32,7 @@ export class ButtonUI extends UIBehaviour {
         this.renderText();
     }
 
-    private renderBox() {
+    private renderBox(): void {
         let color: string = this.buttonColor;
         let borderColor: string = this.buttonColor;
         let scale: Vector2 = this.transform.scale;
@@ -54,16 +54,16 @@ export class ButtonUI extends UIBehaviour {
         Canvas.context.fill();
     }
 
-    private renderText() {
+    private renderText(): void {
         Canvas.context.fillStyle = this.textColor;
-        Canvas.context.font = `${this.bold ? 'bold': ''} ${this.textSize}px ${this.font}`;
+        Canvas.context.font = `${this.bold ? 'bold' : ''} ${this.textSize}px ${this.font}`;
 
         let textLines = this.text.split('\n');
         let lineHeight = this.textSize;
-        let verticalCenterOffset = (textLines.length  - 1) * lineHeight / 2; 
+        let verticalCenterOffset = (textLines.length - 1) * lineHeight / 2;
         textLines.forEach((line, index) => {
             let x = (this.transform.position.x + this.positionOffset.x) * Canvas.ppu;
-            let y = (-1 * (this.transform.position.y + this.positionOffset.y) * Canvas.ppu) + (index * lineHeight) - verticalCenterOffset;
+            let y = (-1 * (this.transform.position.y + this.positionOffset.y) * Canvas.ppu) + (index * lineHeight) - verticalCenterOffset + 4;
             Canvas.context.fillText(line, x, y);
         });
     }
