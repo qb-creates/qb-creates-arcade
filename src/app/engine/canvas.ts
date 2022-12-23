@@ -19,7 +19,7 @@ export abstract class Canvas {
     private static _ppu: number = 25;
     private static _previousTimestamp: number = 0;
     private static _gameObjectList: GameObject[] = [];
-    private static _colliderList: BoxCollider[] = [];
+    public static _colliderList: BoxCollider[] = [];
     private static _uiList: UIBehaviour[] = [];
     private static _mousePosition = new Vector2(0, 0);
     private static _showGrid: boolean = false;

@@ -1,6 +1,6 @@
 import { MonoBehaviour, Canvas, Time, PlayerInput, KeyCode, Vector2, SpriteRenderer } from "../../engine/qbcreates-js-engine";
 import { GameStateManager } from "./managers/game-state-manager.js";
-import { Physics2d } from "../../engine/physics";
+import { Physics2d } from "../../engine/physics2d";
 import { squareSprite } from "src/app/engine/sprite-shape";
 
 export class TestFollow extends MonoBehaviour {
@@ -36,6 +36,7 @@ export class TestFollow extends MonoBehaviour {
     animationcount = 0;
     test = false
     update() {
+        console.log(Physics2d.overlapBox(new Vector2(2,0), new Vector2(1,1)));
         if (PlayerInput.getKey(KeyCode[0])) {
             if (!this.test && Math.abs(Canvas.mousePosition.x - this.transform.position.x) <= 0.2 && Math.abs(Canvas.mousePosition.y - this.transform.position.y) <= 0.2) {
                 this.test = true;
