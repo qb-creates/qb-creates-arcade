@@ -2,6 +2,7 @@ import { MonoBehaviour, Canvas, Time, PlayerInput, KeyCode, Vector2, SpriteRende
 import { GameStateManager } from "./managers/game-state-manager.js";
 import { Physics2d } from "../../engine/physics2d";
 import { squareSprite } from "src/app/engine/sprite-shape";
+import { Debug } from "src/app/engine/debug";
 
 export class TestFollow extends MonoBehaviour {
     target = null;
@@ -36,14 +37,20 @@ export class TestFollow extends MonoBehaviour {
     animationcount = 0;
     test = false
     update() {
-        console.log(Physics2d.overlapBox(new Vector2(2,0), new Vector2(1,1)));
+        // let direction = Vector2.subtract(new Vector2(2,2), new Vector2(0,-2) );
+        // Physics2d.rayCast(new Vector2(0,-2), direction.normalize(), direction.magnitude);
         if (PlayerInput.getKey(KeyCode[0])) {
             if (!this.test && Math.abs(Canvas.mousePosition.x - this.transform.position.x) <= 0.2 && Math.abs(Canvas.mousePosition.y - this.transform.position.y) <= 0.2) {
                 this.test = true;
             }
             if (this.test) {
                 let direction = Vector2.subtract(Canvas.mousePosition, this.transform.position);
-                Physics2d.rayCast(this.transform.position, direction.normalize(), direction.magnitude);
+                let colliders = Physics2d.rayCast(this.transform.position, direction, direction.magnitude);
+                let hitting = false;
+                if (colliders.filter(collider => collider.gameObject.objectName.includes('snake')).length > 0) {
+                    hitting = true;
+                }
+                Debug.drawRay(this.transform.position, direction, direction.magnitude, hitting ? "#00FF00" : "#FF0000")
             }
         }
         if (PlayerInput.getKeyUp(KeyCode[0])) {
@@ -76,7 +83,7 @@ export class TestFollow extends MonoBehaviour {
             this.animationcount = 0;
         }
 
-        if (this.target && this.target.children[this.target.children.length - 1]) {
+        if (false) {
             let step = this.speed * Time.deltaTime;
             let myTarg = this.target.children[this.target.children.length - 1];
             let placeholder = Vector2.subtract(myTarg.transform.position, this.transform.position).normalize();

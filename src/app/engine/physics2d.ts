@@ -4,15 +4,59 @@ import { Vector2 } from "./vector2";
 
 export class Physics2d {
     static rayCast(origin: Vector2, direction: Vector2, distance: number) {
-        let newLocation = Vector2.add(Vector2.multiply(direction.normalize(), distance), origin);
+        let destination = Vector2.add(Vector2.multiply(direction.normalize(), distance), origin);
+        let destinationOffset = new Vector2(destination.x - .5, destination.y - .5);
+        let originOffset = new Vector2(origin.x - .5, origin.y - .5);
+        let directionOffset = Vector2.subtract(destinationOffset, originOffset);
+        let colliderList: BoxCollider[] = []
 
-        Canvas.context.strokeStyle = "#FF0000";
-        Canvas.context.beginPath();
-        Canvas.context.moveTo((origin.x * Canvas.ppu), (-1 * origin.y * Canvas.ppu));
-        Canvas.context.lineTo((newLocation.x * Canvas.ppu), (-1 * newLocation.y * Canvas.ppu));
-        Canvas.context.stroke();
+        Canvas._colliderList.forEach(collider => {
+            // Get the top Left and bottom right coordinates of the box
+            let topLeftCorner = new Vector2((collider.position.x - .5) - (collider.scale.x / 2), (collider.position.y - .5) + (collider.scale.y / 2));
+            let bottomRightCorner = new Vector2((collider.position.x - .5) + (collider.scale.x / 2), (collider.position.y - .5) - (collider.scale.y / 2));
+
+            // Get the percentage of the vector magnitude where it makes contact with the top, bottom, left, and right of the box collider.
+            let contactPercentage = Infinity;
+            let pY1 = (bottomRightCorner.y - originOffset.y) / (destinationOffset.y - originOffset.y);
+            let pY2 = (topLeftCorner.y - originOffset.y) / (destinationOffset.y - originOffset.y);
+            let pX1 = (topLeftCorner.x - originOffset.x) / (destinationOffset.x - originOffset.x);
+            let pX2 = (bottomRightCorner.x - originOffset.x) / (destinationOffset.x - originOffset.x);
+
+            if ((pX1 >= Math.min(pY1, pY2) && pX1 <= Math.max(pY1, pY2))) {
+                contactPercentage = pX1;
+            }
+
+            if ((pX2 >= Math.min(pY1, pY2) && pX2 <= Math.max(pY1, pY2))) {
+                contactPercentage = Math.min(pX2, contactPercentage);
+            }
+
+            if ((pY1 >= Math.min(pX1, pX2) && pY1 <= Math.max(pX1, pX2))) {
+                contactPercentage = Math.min(pY1, contactPercentage);
+            }
+
+            if ((pY2 >= Math.min(pX1, pX2) && pY2 <= Math.max(pX1, pX2))) {
+                contactPercentage = Math.min(pY2, contactPercentage);
+            }
+
+            if (contactPercentage != Infinity) {
+                let contactPointDirection = Vector2.multiply(directionOffset, contactPercentage);
+                let contactPoint = Vector2.add(originOffset, contactPointDirection);
+                let distanceToContactPoint = Vector2.subtract(contactPoint, originOffset).magnitude;
+
+                if (distanceToContactPoint <= Vector2.subtract(destinationOffset, originOffset).magnitude) {
+                    colliderList.push(collider);
+                }
+            }
+        });
+        return colliderList;
     }
 
+    /**
+     * Checks if a collider falls within a box area.
+     * @param position - Position of the Box 
+     * @param size - Size of the box
+     * @returns - Returns an array of all the colliders that falls within the box area.
+     */
     static overlapBox(position: Vector2, size: Vector2): BoxCollider[] {
         let x = position.x;
         let y = position.y;
