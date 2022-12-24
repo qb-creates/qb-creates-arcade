@@ -1,7 +1,7 @@
 import { SpriteRenderer } from "./sprite-renderer";
 import { BoxCollider } from "./box-collider";
 import { MonoBehaviour } from "./mono-behaviour";
-import { QObject } from "./q-object";
+import { Prefab, QObject } from "./q-object";
 import { Vector2 } from "./vector2";
 import { Subject } from "rxjs";
 import { GameObject } from "./game-object";
@@ -9,6 +9,9 @@ import { UIBehaviour } from "./ui/ui-behaviour";
 import { PlayerInput } from "./player-input";
 import { SpriteShape } from "./sprite-shape";
 import { Sprite } from "./sprite";
+import { ButtonUI } from "./ui/button-ui";
+import { ButtonInterface, LabelInterface } from "./component-interface";
+import { LabelUI } from "./ui/label-ui";
 
 export abstract class Canvas {
     public static canvasUpdate: Subject<boolean> = new Subject<boolean>();
@@ -24,6 +27,8 @@ export abstract class Canvas {
     private static _mousePosition = new Vector2(0, 0);
     private static _showGrid: boolean = false;
     private static _showColliders: boolean = false;
+    private static _showGridButtonObject: ButtonUI = null;
+    private static _showColliderButtonObject: ButtonUI = null;
     protected static deltaTime: number = 0;
 
     static get canvasWidth() {
@@ -50,22 +55,6 @@ export abstract class Canvas {
         Canvas._ppu = value;
     }
 
-    static get showGrid() {
-        return this._showGrid;
-    }
-
-    static set showGrid(value: boolean) {
-        this._showGrid = value;
-    }
-
-    static get showColliders() {
-        return this._showColliders;
-    }
-
-    static set showColliders(value: boolean) {
-        this._showColliders = value;
-    }
-
     static get context() {
         return Canvas._context;
     }
@@ -80,7 +69,7 @@ export abstract class Canvas {
      * @param {number} canvasHeight - Height of the canvas in pixels.
      * @param {number} ppu - Pixels Per Unit.
      */
-    public static configureCanvas(canvasWidth: number, canvasHeight: number, ppu: number) {
+    public static configureCanvas(canvasWidth: number, canvasHeight: number, ppu: number, showDebugTools: boolean) {
         Canvas.ppu = ppu;
         Canvas._canvasHeight = canvasHeight;
         Canvas._canvasWidth = canvasWidth;
@@ -93,6 +82,9 @@ export abstract class Canvas {
         // Globally centers all text on the canvas.
         Canvas.context.textBaseline = 'middle';
         Canvas.context.textAlign = "center";
+        if (showDebugTools) {
+            Canvas.ShowDebugTools();
+        }
     }
 
     /**
@@ -167,6 +159,7 @@ export abstract class Canvas {
                 for (let j = -cellCountHeight; j < cellCountHeight; j++) {
                     Canvas._context.strokeStyle = '#80808011';
                     Canvas.context.globalAlpha = 1;
+                    Canvas.context.lineWidth = 1;
                     Canvas._context.beginPath();
                     Canvas._context.roundRect((i * Canvas.ppu), (j * Canvas.ppu), Canvas.ppu, Canvas.ppu, [0]);
                     Canvas._context.stroke();
@@ -187,13 +180,13 @@ export abstract class Canvas {
             let renderer: SpriteRenderer = gameObject.getComponent(SpriteRenderer);
 
             if (renderer) {
-                if (renderer.sprite instanceof Sprite){
+                if (renderer.sprite instanceof Sprite) {
                     let w = Canvas.ppu * gameObject.transform.scale.x;
                     let h = Canvas.ppu * gameObject.transform.scale.y;
-                    
+
                     let x = Canvas.ppu * (gameObject.transform.position.x - 0.5);
                     let y = -Canvas.ppu * (gameObject.transform.position.y + 0.5);
-                    
+
                     x = x + (Canvas.ppu - w) / 2;
                     y = y + (Canvas.ppu - h) / 2;
                     Canvas.context.globalAlpha = renderer.transparency;
@@ -201,7 +194,7 @@ export abstract class Canvas {
                 } else {
                     (renderer.sprite as SpriteShape).drawShape(renderer);
                 }
-            } 
+            }
         });
     }
 
@@ -252,11 +245,123 @@ export abstract class Canvas {
         Canvas.context.fillText(`${Math.round(1000 / Canvas.deltaTime)} fps`, x, y);
     }
 
+    private static ShowDebugTools() {
+        if (!Canvas._showColliderButtonObject && !Canvas._showGridButtonObject) {
+            let showColliderPrefab: Prefab = {
+                children: [],
+                layer: 0,
+                objectName: 'Show Colliders button',
+                position: new Vector2(-Canvas.canvasWidth / (2.1 * Canvas.ppu), Canvas.canvasHeight / (2.15 * Canvas.ppu)),
+                scale: new Vector2(.6, .6),
+                components: [
+                    {
+                        component: ButtonUI,
+                        properties: <ButtonInterface>{
+                            text: '',
+                            font: 'Monospace',
+                            textSize: 20,
+                            textColor: 'white',
+                            buttonColor: 'white',
+                            bold: false
+                        }
+                    }
+                ]
+            }
+
+            let showColliderLabelPrefab: Prefab = {
+                children: [],
+                layer: 0,
+                objectName: 'Show Colliders label',
+                position: new Vector2(-Canvas.canvasWidth / (2.5 * Canvas.ppu), Canvas.canvasHeight / (2.165 * Canvas.ppu)),
+                scale: new Vector2(1, 1),
+                components: [
+                    {
+                        component: LabelUI,
+                        properties: <LabelInterface>{
+                            text: 'Show Colliders',
+                            font: 'Monospace',
+                            textSize: 20,
+                            textColor: 'white',
+                            bold: true
+                        }
+                    }
+                ]
+            }
+
+            Canvas._showColliderButtonObject = QObject.instantiate(showColliderPrefab).getComponent(ButtonUI);
+            Canvas._showColliderButtonObject.borderThickness = 5;
+            Canvas._showColliderButtonObject.borderRadius = 0;
+            Canvas._showColliderButtonObject.clickEvent.subscribe(buttonState => {
+                Canvas._showColliders = buttonState.toggled;
+                if (buttonState.toggled) {
+                    Canvas._showColliderButtonObject.buttonColor = 'blue'
+                } else {
+                    Canvas._showColliderButtonObject.buttonColor = 'white'
+                }
+            });
+            QObject.instantiate(showColliderLabelPrefab);
+
+            let showGridPrefab: Prefab = {
+                children: [],
+                layer: 0,
+                objectName: 'Show Grid button',
+                position: new Vector2(-Canvas.canvasWidth / (2.1 * Canvas.ppu), Canvas.canvasHeight / (2.35 * Canvas.ppu)),
+                scale: new Vector2(.6, .6),
+                components: [
+                    {
+                        component: ButtonUI,
+                        properties: <ButtonInterface>{
+                            text: '',
+                            font: 'Monospace',
+                            textSize: 20,
+                            textColor: 'white',
+                            buttonColor: 'white',
+                            bold: false
+                        }
+                    }
+                ]
+            }
+
+            let showGridLabelPrefab: Prefab = {
+                children: [],
+                layer: 0,
+                objectName: 'Show Grid label',
+                position: new Vector2(-Canvas.canvasWidth / (2.37 * Canvas.ppu), Canvas.canvasHeight / (2.365 * Canvas.ppu)),
+                scale: new Vector2(1, 1),
+                components: [
+                    {
+                        component: LabelUI,
+                        properties: <LabelInterface>{
+                            text: 'Show Grid',
+                            font: 'Monospace',
+                            textSize: 20,
+                            textColor: 'white',
+                            bold: true
+                        }
+                    }
+                ]
+            }
+
+            Canvas._showGridButtonObject = QObject.instantiate(showGridPrefab).getComponent(ButtonUI);
+            Canvas._showGridButtonObject.borderThickness = 5;
+            Canvas._showGridButtonObject.borderRadius = 0;
+            Canvas._showGridButtonObject.clickEvent.subscribe(buttonState => {
+                Canvas._showGrid = buttonState.toggled;
+                if (buttonState.toggled) {
+                    Canvas._showGridButtonObject.buttonColor = 'blue'
+                } else {
+                    Canvas._showGridButtonObject.buttonColor = 'white'
+                }
+            });
+            QObject.instantiate(showGridLabelPrefab);
+        }
+    }
+
     // Acts as a private static constructor 
     private static __ctor = (() => {
         Canvas._canvas = <HTMLCanvasElement>document.getElementById('canvas');
         Canvas._context = Canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
-        
+
         // Will be used to track our mouse position on the canvas.
         addEventListener("mousemove", function (evt) {
             let rect = Canvas._canvas.getBoundingClientRect();
@@ -280,7 +385,6 @@ export abstract class Canvas {
         addEventListener('contextmenu', (e) => {
             e.preventDefault();
         });
-
         requestAnimationFrame(Canvas.updateCanvas);
     })();
 }

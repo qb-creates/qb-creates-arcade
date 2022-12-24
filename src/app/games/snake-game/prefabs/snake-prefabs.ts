@@ -68,14 +68,14 @@ export let snake: Prefab = {
             children: [],
             layer: 1,
             objectName: "snakeHead",
-            position: new Vector2(3, 0),
-            scale: new Vector2(2, 2),
+            position: new Vector2(1, 0),
+            scale: new Vector2(1, 1),
             components: [
                 {
                     component: BoxCollider,
                     properties: <BoxColliderInterface> {
-                        position: new Vector2(3, 0),
-                        scale: new Vector2(2, 2),
+                        position: new Vector2(1, 0),
+                        scale: new Vector2(1, 1),
                     }
                 },
                 {

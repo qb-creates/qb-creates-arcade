@@ -3,6 +3,13 @@ import { Canvas } from "./canvas";
 import { Vector2 } from "./vector2";
 
 export class Physics2d {
+    /**
+     * Casts a ray against Colliders in the Scene
+     * @param origin - The Point in 2D space where the ray originates.
+     * @param direction - A vector representing the direction of the ray.
+     * @param distance - The maximium distance over which to cast the ray.
+     * @returns - The list of colliders is returned.
+     */
     static rayCast(origin: Vector2, direction: Vector2, distance: number) {
         let destination = Vector2.add(Vector2.multiply(direction.normalize(), distance), origin);
         let destinationOffset = new Vector2(destination.x - .5, destination.y - .5);
@@ -38,7 +45,7 @@ export class Physics2d {
                 contactPercentage = Math.min(pY2, contactPercentage);
             }
 
-            if (contactPercentage != Infinity) {
+            if (contactPercentage != Infinity && contactPercentage >= 0) {
                 let contactPointDirection = Vector2.multiply(directionOffset, contactPercentage);
                 let contactPoint = Vector2.add(originOffset, contactPointDirection);
                 let distanceToContactPoint = Vector2.subtract(contactPoint, originOffset).magnitude;

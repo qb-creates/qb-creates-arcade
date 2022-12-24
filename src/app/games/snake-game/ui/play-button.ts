@@ -16,8 +16,8 @@ export class PlayButton extends MonoBehaviour {
         });
 
         this._playButton = this.gameObject.getComponent(ButtonUI);
-        this._playButton.clickEvent.subscribe(onClick => {
-            if (!onClick) {
+        this._playButton.clickEvent.subscribe(buttonState => {
+            if (buttonState.released) {
                 this.gameObject.isActive = false;
                 GameStateManager.onGameStart();
             }

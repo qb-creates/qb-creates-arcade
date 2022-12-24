@@ -37,8 +37,6 @@ export class TestFollow extends MonoBehaviour {
     animationcount = 0;
     test = false
     update() {
-        // let direction = Vector2.subtract(new Vector2(2,2), new Vector2(0,-2) );
-        // Physics2d.rayCast(new Vector2(0,-2), direction.normalize(), direction.magnitude);
         if (PlayerInput.getKey(KeyCode[0])) {
             if (!this.test && Math.abs(Canvas.mousePosition.x - this.transform.position.x) <= 0.2 && Math.abs(Canvas.mousePosition.y - this.transform.position.y) <= 0.2) {
                 this.test = true;
