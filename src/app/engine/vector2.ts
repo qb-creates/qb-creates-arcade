@@ -37,6 +37,11 @@ export class Vector2 {
     static get right() {
         return new Vector2(1, 0);
     }
+
+    static get zero() {
+        return new Vector2(0, 0);
+    }
+
     constructor(x: number, y: number) {
         this._x = x;
         this._y = y;
@@ -62,9 +67,13 @@ export class Vector2 {
      * @param {Vector2} vectorB 
      * @returns {Vector2} - Returns the sum of the two Vectors.
      */
-    static add(vectorA: Vector2, vectorB: Vector2) {
-        let x = vectorA.x + vectorB.x;
-        let y = vectorA.y + vectorB.y;
+    static add(...vectors: Vector2[]): Vector2 {
+        let x = 0;
+        let y = 0;
+        vectors.forEach(vector => {
+            x = x + vector.x;
+            y = y + vector.y;
+        });
 
         return new Vector2(x, y);
     }
@@ -75,7 +84,7 @@ export class Vector2 {
      * @param {Vector2} vectorB 
      * @returns {Vector2} - Returns the difference of the two Vectors.
      */
-    static subtract(vectorA: Vector2, vectorB: Vector2) {
+    static subtract(vectorA: Vector2, vectorB: Vector2): Vector2 {
         let x = vectorA.x - vectorB.x;
         let y = vectorA.y - vectorB.y;
 
@@ -88,7 +97,11 @@ export class Vector2 {
      * @param {number} num 
      * @returns Returns the product as a Vector2.
      */
-    static multiply(vectorA: Vector2, num: number) {
+    static multiply(vectorA: Vector2, num: number): Vector2 {
         return new Vector2(vectorA.x * num, vectorA.y * num);
+    }
+
+    static divide(vectorA: Vector2, num: number) {
+        return new Vector2(vectorA.x / num, vectorA.y / num);
     }
 }

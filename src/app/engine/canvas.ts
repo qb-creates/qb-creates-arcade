@@ -195,6 +195,14 @@ export abstract class Canvas {
                     (renderer.sprite as SpriteShape).drawShape(renderer);
                 }
             }
+            // Render Colliders
+            if (this._showColliders) {
+                let colliders = gameObject.getComponents(BoxCollider);
+
+                colliders.forEach(collider => {
+                    collider.render();
+                });
+            }
         });
     }
 
@@ -216,11 +224,6 @@ export abstract class Canvas {
                 collider.gameObject.getComponents(MonoBehaviour).forEach(mono => {
                     mono.onTriggerExit(collider.collisionList);
                 });
-            }
-
-            // Render Colliders
-            if (this._showColliders) {
-                collider.render();
             }
         });
     }

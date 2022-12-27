@@ -26,7 +26,7 @@ export class SnakeGameComponent implements OnInit {
     border.transform.position = new Vector2(-10, 0);
 
     border = QObject.instantiate(prefab.verticalBorder);
-    border.transform.position = new Vector2(10, 0);
+    border.transform.position = new Vector2(8, -3);
 
     border = QObject.instantiate(prefab.horizontalBorder);
     border.transform.position = new Vector2(0, 10);
@@ -34,25 +34,34 @@ export class SnakeGameComponent implements OnInit {
     border = QObject.instantiate(prefab.horizontalBorder);
     border.transform.position = new Vector2(0, -10);
 
+    border = QObject.instantiate(prefab.horizontalBorder);
+    border.transform.position = new Vector2(8, -9 );
+
+    border = QObject.instantiate(prefab.horizontalBorder);
+    border.transform.position = new Vector2(-8, -.75 );
+
+    border = QObject.instantiate(prefab.horizontalBorder);
+    border.transform.position = new Vector2(8, -9 );
+
     let player = QObject.instantiate(snake);
 
     let enemy = QObject.instantiate(prefab.enemy);
     enemy.getComponent(TestFollow).target = player;
-
+    // enemy.transform.position = new Vector2(-5, -5);
     QObject.instantiate(prefab.playButton);
 
     ScoreManager.scoreText = QObject.instantiate(prefab.scoreLabel).getComponent(LabelUI);
-    let enemy2 = QObject.instantiate(prefab.enemy);
-    enemy2.transform.position = new Vector2(-5, -5);
-    enemy2.getComponent(TestFollow).target = player;
+    // let enemy2 = QObject.instantiate(prefab.enemy);
+    // enemy2.transform.position = new Vector2(-5, -5);
+    // enemy2.getComponent(TestFollow).target = player;
 
-    let enemy3 = QObject.instantiate(prefab.enemy);
-    enemy3.transform.position = new Vector2(5, 5);
-    enemy3.getComponent(TestFollow).target = player;
+    // let enemy3 = QObject.instantiate(prefab.enemy);
+    // enemy3.transform.position = new Vector2(5, 5);
+    // enemy3.getComponent(TestFollow).target = player;
 
-    let enemy4 = QObject.instantiate(prefab.enemy);
-    enemy4.transform.position = new Vector2(1.9, -1.1);
-    enemy4.getComponent(TestFollow).target = player;
+    // let enemy4 = QObject.instantiate(prefab.enemy);
+    // enemy4.transform.position = new Vector2(1.9, -1.1);
+    // enemy4.getComponent(TestFollow).target = player;
   }
 }
 

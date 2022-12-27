@@ -12,16 +12,16 @@ export class SnakeInput extends MonoBehaviour {
     }
 
     update() {
-        if (PlayerInput.getKeyDown(KeyCode.w) && this._snakeMovement.currentDirection.y != -1) {
+        if (PlayerInput.getKeyDown(KeyCode.KeyW) && this._snakeMovement.currentDirection.y != -1) {
             this._snakeMovement.verticalAxis = 1;
             this._snakeMovement.horizontalAxis = 0;
-        } else if (PlayerInput.getKeyDown(KeyCode.s) && this._snakeMovement.currentDirection.y != 1) {
+        } else if (PlayerInput.getKeyDown(KeyCode.KeyS) && this._snakeMovement.currentDirection.y != 1) {
             this._snakeMovement.verticalAxis = -1;
             this._snakeMovement.horizontalAxis = 0;
-        } else if (PlayerInput.getKeyDown(KeyCode.a) && this._snakeMovement.currentDirection.x != 1) {
+        } else if (PlayerInput.getKeyDown(KeyCode.KeyA) && this._snakeMovement.currentDirection.x != 1) {
             this._snakeMovement.verticalAxis = 0;
             this._snakeMovement.horizontalAxis = -1;
-        } else if (PlayerInput.getKeyDown(KeyCode.d) && this._snakeMovement.currentDirection.x != -1) {
+        } else if (PlayerInput.getKeyDown(KeyCode.KeyD) && this._snakeMovement.currentDirection.x != -1) {
             this._snakeMovement.verticalAxis = 0;
             this._snakeMovement.horizontalAxis = 1;
         }

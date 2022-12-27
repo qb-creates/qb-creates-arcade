@@ -103,7 +103,7 @@ export let enemy: Prefab = {
             component: BoxCollider,
             properties: <BoxColliderInterface>{
                 position: new Vector2(-5, 5),
-                scale: new Vector2(3, 3),
+                scale: new Vector2(1, 1),
             }
         },
         {

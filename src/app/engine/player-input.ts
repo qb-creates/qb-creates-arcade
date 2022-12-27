@@ -10,37 +10,42 @@ export class PlayerInput {
             keyDown: false,
             keyUp: false
         },
-        a: {
+        Space: {
             key: false,
             keyDown: false,
             keyUp: false
         },
-        b: {
+        KeyA: {
             key: false,
             keyDown: false,
             keyUp: false
         },
-        c: {
+        KeyB: {
             key: false,
             keyDown: false,
             keyUp: false
         },
-        d: {
+        KeyC: {
             key: false,
             keyDown: false,
             keyUp: false
         },
-        q: {
+        KeyD: {
             key: false,
             keyDown: false,
             keyUp: false
         },
-        s: {
+        KeyQ: {
             key: false,
             keyDown: false,
             keyUp: false
         },
-        w: {
+        KeyS: {
+            key: false,
+            keyDown: false,
+            keyUp: false
+        },
+        KeyW: {
             key: false,
             keyDown: false,
             keyUp: false
@@ -78,18 +83,18 @@ export class PlayerInput {
                 return;
             }
 
-            if (PlayerInput._KeyStatus.hasOwnProperty(event.key)) {
-                PlayerInput._KeyStatus[event.key].keyUp = false;
-                PlayerInput._KeyStatus[event.key].keyDown = true;
-                PlayerInput._KeyStatus[event.key].key = true;
+            if (PlayerInput._KeyStatus.hasOwnProperty(event.code)) {
+                PlayerInput._KeyStatus[event.code].keyUp = false;
+                PlayerInput._KeyStatus[event.code].keyDown = true;
+                PlayerInput._KeyStatus[event.code].key = true;
             }
         });
 
         addEventListener('keyup', (event) => {
-            if (PlayerInput._KeyStatus.hasOwnProperty(event.key)) {
-                PlayerInput._KeyStatus[event.key].keyDown = false;
-                PlayerInput._KeyStatus[event.key].keyUp = true;
-                PlayerInput._KeyStatus[event.key].key = false;
+            if (PlayerInput._KeyStatus.hasOwnProperty(event.code)) {
+                PlayerInput._KeyStatus[event.code].keyDown = false;
+                PlayerInput._KeyStatus[event.code].keyUp = true;
+                PlayerInput._KeyStatus[event.code].key = false;
             }
         });
 
@@ -114,33 +119,31 @@ export class PlayerInput {
 export const KeyCode = {
     0: '0',
     2: '2',
-    a: 'a',
-    b: 'b',
-    c: 'c',
-    d: 'd',
-    e: 'e',
-    f: 'f',
-    g: 'g',
-    h: 'h',
-    i: 'i',
-    j: 'j',
-    k: 'k',
-    l: 'l',
-    m: 'm',
-    n: 'n',
-    o: 'o',
-    p: 'p',
-    q: 'q',
-    r: 'r',
-    s: 's',
-    t: 't',
-    u: 'u',
-    v: 'v',
-    w: 'w',
-    x: 'x',
-    y: 'y',
-    z: 'z',
-    A: 'A',
-    B: 'B',
-    C: 'C'
+    Space: 'Space',
+    KeyA: 'KeyA',
+    KeyB: 'KeyB',
+    KeyC: 'KeyC',
+    KeyD: 'KeyD',
+    KeyE: 'KeyE',
+    KeyF: 'KeyF',
+    KeyG: 'KeyG',
+    KeyH: 'KeyH',
+    KeyI: 'KeyI',
+    KeyJ: 'KeyJ',
+    KeyK: 'KeyK',
+    KeyL: 'KeyL',
+    KeyM: 'KeyM',
+    KeyN: 'KeyN',
+    KeyO: 'KeyO',
+    KeyP: 'KeyP',
+    KeyQ: 'KeyQ',
+    KeyR: 'KeyR',
+    KeyS: 'KeyS',
+    KeyT: 'KeyT',
+    KeyU: 'KeyU',
+    KeyV: 'KeyV',
+    KeyW: 'KeyW',
+    KeyX: 'KeyX',
+    KeyY: 'KeyY',
+    KeyZ: 'KeyZ',
 }
