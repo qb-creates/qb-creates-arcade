@@ -1,4 +1,4 @@
-import { BoxCollider, SpriteRenderer, Vector2 } from "../../engine/qbcreates-js-engine";
+import { BoxCollider, Rigidbody2d, SpriteRenderer, Vector2 } from "../../engine/qbcreates-js-engine";
 import { snakeBodyColor, SnakeCollision, snakeHeadColor, SnakeInput, SnakeMovement, SnakeSize } from "./snake/snake-exports";
 import { Prefab } from "src/app/engine/q-object";
 import { squareSprite } from "src/app/engine/sprite-shape";
@@ -108,6 +108,10 @@ export let enemy: Prefab = {
         },
         {
             component: TestFollow,
+            properties: {}
+        },
+        {
+            component: Rigidbody2d,
             properties: {}
         }
     ]

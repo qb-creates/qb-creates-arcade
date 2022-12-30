@@ -35,13 +35,10 @@ export class SnakeGameComponent implements OnInit {
     border.transform.position = new Vector2(0, -10);
 
     border = QObject.instantiate(prefab.horizontalBorder);
-    border.transform.position = new Vector2(8, -9 );
+    border.transform.position = new Vector2(8, -8 );
 
-    border = QObject.instantiate(prefab.horizontalBorder);
-    border.transform.position = new Vector2(-8, -.75 );
-
-    border = QObject.instantiate(prefab.horizontalBorder);
-    border.transform.position = new Vector2(8, -9 );
+    // border = QObject.instantiate(prefab.horizontalBorder);
+    // border.transform.position = new Vector2(-8, -.75 );
 
     let player = QObject.instantiate(snake);
 

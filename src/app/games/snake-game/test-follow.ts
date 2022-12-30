@@ -1,4 +1,4 @@
-import { MonoBehaviour, Canvas, Time, PlayerInput, KeyCode, Vector2, SpriteRenderer } from "../../engine/qbcreates-js-engine";
+import { MonoBehaviour, Canvas, Time, PlayerInput, KeyCode, Vector2, SpriteRenderer, Rigidbody2d } from "../../engine/qbcreates-js-engine";
 import { GameStateManager } from "./managers/game-state-manager.js";
 import { Physics2d } from "../../engine/physics2d";
 import { squareSprite } from "src/app/engine/sprite-shape";
@@ -6,11 +6,14 @@ import { Debug } from "src/app/engine/debug";
 
 export class TestFollow extends MonoBehaviour {
     target = null;
-    // speed: Vector2 = new Vector2(0, 0);
-    speedY: Vector2 = new Vector2(0, 0);
-    speedX: Vector2 = new Vector2(0, 0);
     _play = false;
-
+    animation = [];
+    animationcount = 0;
+    test = false
+    jump:boolean = false;
+    direction: number = 0;
+    isGrounded: boolean = true;
+    jumpTimer = 0;
     awake() {
         GameStateManager.gameStateEvent.subscribe(isStarted => {
             this._play = true;
@@ -34,23 +37,11 @@ export class TestFollow extends MonoBehaviour {
     }
 
     start() {
-        this.addForce(0);
+
     }
-    animation = [];
-    animationcount = 0;
-    test = false
-    modify = new Vector2(0, 0);
-    // prevVelocity = new Vector2(0, 0);
-    prevVelocityY = new Vector2(0, 0);
-    prevVelocityX = new Vector2(0, 0);
-    // force = new Vector2(0, 0);
-    forceY = new Vector2(0, 0);
-    forceX = new Vector2(0, 0);
-    normalForce = new Vector2(0, 0);
-    normalForceX = new Vector2(0, 0);
-    myForce = new Vector2(0, 0);
-    gravityForce = new Vector2(0, -40);
+    
     update() {
+        // console.log(Time.time);
         if (PlayerInput.getKey(KeyCode[0])) {
             if (!this.test && Math.abs(Canvas.mousePosition.x - this.transform.position.x) <= 0.2 && Math.abs(Canvas.mousePosition.y - this.transform.position.y) <= 0.2) {
                 this.test = true;
@@ -68,7 +59,13 @@ export class TestFollow extends MonoBehaviour {
         if (PlayerInput.getKeyUp(KeyCode[0])) {
             this.test = false;
         }
+        let collide = Physics2d.rayCast(this.transform.position, Vector2.down, .6);
 
+        if (collide.length == 0) {
+            this.isGrounded = false;
+        } else {
+            this.isGrounded = true;
+        }
         // if (this.animationcount == 0) {
         //     this.gameObject.transform.scale = new Vector2(.8, .8);
         // }
@@ -95,109 +92,43 @@ export class TestFollow extends MonoBehaviour {
         //     this.animationcount = 0;
         // }
 
-        if (true) {
-            if (PlayerInput.getKeyDown(KeyCode.Space)) {
-                this.myForce = new Vector2(this.myForce.x, this.myForce.y + 100);
-            }
-            if (PlayerInput.getKey(KeyCode.KeyD)) {
-                if (this.myForce.x < 0) {
-                    this.myForce = new Vector2(20, this.myForce.y);
-                } else {
-                    this.myForce = new Vector2(this.myForce.x + 20, this.myForce.y);
-                }
-            }
-            if (PlayerInput.getKey(KeyCode.KeyA)) {
-                if (this.myForce.x > 0) {
-                    this.myForce = new Vector2(-20, this.myForce.y);
-                } else {
-                    this.myForce = new Vector2(this.myForce.x - 20, this.myForce.y);
-                }
-            }
-            if (PlayerInput.getKeyUp(KeyCode.KeyA) || PlayerInput.getKeyUp(KeyCode.KeyD)) {
-                this.myForce = new Vector2(0, this.myForce.y);
-            }
-            
-            
-
-            if (this.myForce.y > 0) {
-                this.myForce = new Vector2(this.myForce.x, this.myForce.y - 3);
-                if (this.myForce.y < 0) {
-                    this.myForce = new Vector2(this.myForce.x, 0);
-                }
-            }
-            if (this.myForce.x > 0) {
-                this.myForce = new Vector2(this.myForce.x - 1, this.myForce.y);
-            } else if (this.myForce.x < 0) {
-                this.myForce = new Vector2(this.myForce.x + 1, this.myForce.y);
-            }
-            
-
-            this.forceY = Vector2.add(new Vector2(0, this.myForce.y), this.gravityForce, this.normalForce);
-            this.speedY  = Vector2.add(Vector2.multiply(this.forceY, Time.deltaTime), this.prevVelocityY)
-            let prevPosY = new Vector2(0, this.transform.position.y);
-            let stepY = this.speedY.magnitude * Time.deltaTime;
-            let myTargY = Vector2.add(prevPosY, this.forceY.normalize());
-            let directionY = Vector2.subtract(myTargY, prevPosY).normalize();
-            let newPosY = Vector2.add(prevPosY, Vector2.multiply(directionY, stepY));
-            let colliders = Physics2d.rayCast(this.transform.position, Vector2.down, Vector2.subtract(newPosY, prevPosY).magnitude + .5);
-            Debug.drawRay(this.transform.position, Vector2.down, Vector2.subtract(newPosY, prevPosY).magnitude + .5, 'green')
-            if (colliders.length > 0 && this.forceY.y <= 0) {
-                this.normalForce = new Vector2(0, 40);
-                let l1 = new Vector2((colliders[0].position.x - .5) - (colliders[0].scale.x / 2), (colliders[0].position.y - .5) + (colliders[0].scale.y / 2));
-                this.transform.position = new Vector2(this.transform.position.x, l1.y + 1);
-            } else {
-                this.normalForce = Vector2.zero;
-                this.transform.position = Vector2.add(this.transform.position, Vector2.multiply(directionY, stepY));
-            }
-            if (this.forceY.y == 0) {
-                this.speedY.y = 0;
-            }
-
-            this.prevVelocityY = Vector2.divide(Vector2.subtract(new Vector2(0, this.transform.position.y), prevPosY), Time.deltaTime);
-            
-            this.forceX = Vector2.add(new Vector2(this.myForce.x, 0), this.normalForceX);
-            this.speedX  = Vector2.add(Vector2.multiply(this.forceX, Time.deltaTime), this.prevVelocityX)
-            
-            if (Math.abs(this.speedX.x) >= 8) {
-                this.speedX.x = Math.sign(this.speedX.x) * 8;
-                this.myForce = new Vector2(this.myForce.x + (-Math.sign(this.myForce.x) * 1), this.myForce.y);
-            }
-
-            let prevPosX = new Vector2(this.transform.position.x, 0);
-            let stepX = this.speedX.magnitude * Time.deltaTime;
-            let myTargX = Vector2.add(prevPosX, this.forceX.normalize());
-            let directionX = Vector2.subtract(myTargX, prevPosX).normalize();
-            let newPosX = Vector2.add(prevPosX, Vector2.multiply(directionX, stepX));
-            colliders = Physics2d.rayCast(this.transform.position, Vector2.multiply(Vector2.right, Math.sign(this.forceX.x)), Vector2.subtract(newPosX, prevPosX).magnitude + .5);
-            Debug.drawRay(this.transform.position, Vector2.multiply(Vector2.right, Math.sign(this.forceX.x)), Vector2.subtract(newPosX, prevPosX).magnitude + .5, 'yellow')
-            if (colliders.length > 0 && this.forceX.x != 0) {
-                // this.normalForceX = new Vector2(-this.forceX.x, 0);
-                let r2 = new Vector2((colliders[0].position.x - .5) + (colliders[0].scale.x / 2), (colliders[0].position.y - .5) - (colliders[0].scale.y / 2));
-                let l1 = new Vector2((colliders[0].position.x - .5) - (colliders[0].scale.x / 2), (colliders[0].position.y - .5) + (colliders[0].scale.y / 2));
-                if (Math.sign(this.forceX.x) == -1) {
-                    this.transform.position = new Vector2(r2.x + 1.1, this.transform.position.y);
-                } else if (Math.sign(this.forceX.x) == 1) {
-                    this.transform.position = new Vector2(l1.x - .1, this.transform.position.y);
-                }
-            } else {
-                this.normalForceX = new Vector2(0, 0);
-                this.transform.position = Vector2.add(this.transform.position, Vector2.multiply(directionX, stepX));
-            }
-            if (this.forceX.x == 0) {
-                this.speedX.x = 0;
-            }
-            this.prevVelocityX = Vector2.divide(Vector2.subtract(new Vector2(this.transform.position.x, 0), prevPosX), Time.deltaTime);
-            // console.log(this.speedX, this.speedY, this.forceY);
+        if (PlayerInput.getKeyDown(KeyCode.Space)) {
+            this.jump = true;
+            this.jumpTimer = Time.time + .1;
+        }
+        if (PlayerInput.getKey(KeyCode.KeyD)) {
+            this.direction = 1;
+        }
+                
+        if (PlayerInput.getKey(KeyCode.KeyA)) {
+            this.direction = -1;
+        }
+        if (!PlayerInput.getKey(KeyCode.KeyA) && !PlayerInput.getKey(KeyCode.KeyD)) {
+            this.direction = 0;
         }
         this.animationcount++;
     }
-    addForce(force) {
-        // this.myForce = new Vector2(0, this.myForce.y + force);
-        // let linearDrage = new Vector2(0, 0);
-        // linearDrage = new Vector2(0, -40);
-        // this.force = Vector2.add(this.myForce, linearDrage, this.normalForce);
-        // console.log('asdfsf   ', this.myForce)
+    prevY = 0;
+    fixedUpdate(): void {
+        let rb = this.gameObject.getComponent(Rigidbody2d);
+        
+        rb.addForce(new Vector2(50 * this.direction, 0));
+        
+        if (this.jumpTimer > Time.time && this.isGrounded) {
+            this.jumpTimer = 0;
+            rb.addForce(new Vector2(0, 10));
+        }
+        
+        if (Math.abs(rb.velocityX.x) > 9) {
+            rb.velocityX.x = Math.sign(rb.velocityX.x) * 9;
+        }
+        
+        if (this.direction == 0) {
+            rb.velocityX.x = Math.sign(rb.velocityX.x) * 0;
+        }
+        this.prevY = rb.velocityY.y;
     }
+
     onTriggerEnter(colliders) {
 
     }

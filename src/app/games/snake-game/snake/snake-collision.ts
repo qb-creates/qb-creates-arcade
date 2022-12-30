@@ -28,10 +28,7 @@ export class SnakeCollision extends MonoBehaviour {
         }
     }
     onTriggerEnter(colliders: Map<Guid, BoxCollider>) {
-        console.log('hit');
-        console.log(colliders);
         colliders.forEach(collider => {
-            console.log(collider);
             if (collider.gameObject.objectName.includes('snake')) {
                 if (this.gameObject.parent.children[this.gameObject.parent.children.length - 1] == this.gameObject) {
                     GameStateManager.onGameOver();

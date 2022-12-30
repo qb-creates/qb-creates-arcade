@@ -2,6 +2,7 @@ export { QObject } from "./q-object";
 export { GameObject } from "./game-object";
 export { Component } from "./component";
 export { Transform } from "./transform";
+export {Rigidbody2d} from "./rigidbody2d"
 export { SpriteRenderer } from "./sprite-renderer";
 export { MonoBehaviour } from "./mono-behaviour";
 export { BoxCollider } from "./box-collider";

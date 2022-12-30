@@ -1,8 +1,18 @@
-import { BoxCollider } from "./box-collider";
-import { Canvas } from "./canvas";
-import { Vector2 } from "./vector2";
+import { Subject } from "rxjs";
+import { Vector2, Rigidbody2d, Canvas, BoxCollider } from "./qbcreates-js-engine";
 
 export class Physics2d {
+    public static physicsUpdate: Subject<boolean> = new Subject<boolean>();
+    private static _rigidBodyList: Rigidbody2d[] = [];
+
+    /**
+    * Will add the rigidbody to the list of rigidbodies that will have their physics updated.
+    * @param {Rigidbody2d} rigidbody - The rigidbody that needs to be added to the rigidbody list. 
+    */
+    public static addRigidbody(rigidbody: Rigidbody2d) {
+        Physics2d._rigidBodyList.push(rigidbody);
+    }
+
     /**
      * Casts a ray against Colliders in the Scene
      * @param origin - The Point in 2D space where the ray originates.
@@ -100,7 +110,57 @@ export class Physics2d {
         return colliderList;
     }
 
+    static BoxCast(orign: Vector2, boxWidth: Vector2, direction: Vector2, distance: number) {
+        let x = orign.x;
+        let y = orign.y;
+        let w = boxWidth.x != 0 ? boxWidth.x - .1 : 0;
+        let h = boxWidth.y != 0 ? boxWidth.y - .1 : 0;
+        let colliderList: BoxCollider[] = []
+
+        Canvas._colliderList.forEach(collider => {
+            let right = direction.x > 0 ? (distance * direction.x) : 0;
+            let left = direction.x < 0 ? (distance * direction.x) : 0;
+            let top = direction.y > 0 ? (distance * direction.y) : 0;
+            let bottom = direction.y < 0 ? (distance * direction.y) : 0;
+            // Get the top left corner coordinates of the box
+            let l1 = new Vector2((x - .5) - (w / 2) + left, (y - .5) + (h / 2) + top);
+            let r1 = new Vector2((x - .5) + (w / 2) + right, (y - .5) - (h / 2) + bottom);
+
+            // Get the bottom right coordinates of the box
+            let l2 = new Vector2((collider.position.x - .5) - (collider.scale.x / 2), (collider.position.y - .5) + (collider.scale.y / 2));
+            let r2 = new Vector2((collider.position.x - .5) + (collider.scale.x / 2), (collider.position.y - .5) - (collider.scale.y / 2));
+
+            // if rectangle has area 0, no overlap
+            if ((l1.x == r1.x || l1.y == r1.y || r2.x == l2.x || l2.y == r2.y)) {
+                return;
+            }
+
+            // If one rectangle is on left side of other
+            if (l1.x > r2.x || l2.x > r1.x) {
+                return;
+            }
+
+            // If one rectangle is above the other
+            if (r1.y > l2.y || r2.y > l1.y) {
+                return;
+            }
+
+            colliderList.push(collider)
+        });
+        return colliderList;
+    }
+
     static overlapCircle() {
 
     }
+
+    // Acts as a private static constructor 
+    private static __ctor = (() => {
+        setInterval(() => {
+            Physics2d._rigidBodyList.forEach((rigidbody) => {
+                rigidbody.calculatePhysics();
+            });
+            Physics2d.physicsUpdate.next(true);
+        }, 0.02 * 1000);
+    })();
 }

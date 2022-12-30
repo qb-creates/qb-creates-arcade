@@ -1,11 +1,13 @@
 import { Guid } from "guid-typescript";
 import { Subscription } from "rxjs";
+import { Physics2d } from "./physics2d";
 import { ComponentObject } from "./q-object";
-import { Time, Component, Canvas, GameObject, BoxCollider } from "./qbcreates-js-engine";
+import { Time, Component, Canvas, GameObject, BoxCollider, Rigidbody2d } from "./qbcreates-js-engine";
 
 export class MonoBehaviour extends Component {
     private _fixedUpdateInterval: ReturnType<typeof setTimeout> = null;
     private _canvasUpdateSubscription: Subscription = null;
+    private _physicsUpdateSubscription: Subscription = null;
 
     constructor(gameObject: GameObject) {
         super(gameObject);
@@ -14,17 +16,14 @@ export class MonoBehaviour extends Component {
             this.awake();
             this.start();
 
-            this._fixedUpdateInterval = setInterval(() => {
+            this._physicsUpdateSubscription = Physics2d.physicsUpdate.subscribe(update => {
                 if (this.gameObject.isActive) {
-
                     this.fixedUpdate();
                 }
-            }, Time.fixedDeltaTime * 1000);
-
+            });
 
             this._canvasUpdateSubscription = Canvas.canvasUpdate.subscribe(isStarted => {
                 if (!this.gameObject.isDestroyed) {
-
                     this.CheckForDestroyedReferences();
                     this.update();
                 }
@@ -34,6 +33,7 @@ export class MonoBehaviour extends Component {
 
     destroy(): void {
         this._canvasUpdateSubscription.unsubscribe();
+        this._physicsUpdateSubscription.unsubscribe();
         clearInterval(this._fixedUpdateInterval);
     }
 

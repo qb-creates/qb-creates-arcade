@@ -1,5 +1,5 @@
-import { Canvas, Component, Transform, SpriteRenderer, Vector2, BoxCollider, QObject } from "./qbcreates-js-engine";
-import { UIBehaviour } from "./ui/ui-behaviour";
+import { Physics2d } from "./physics2d";
+import { Canvas,  Component, Transform, SpriteRenderer, Vector2, BoxCollider, QObject, Rigidbody2d } from "./qbcreates-js-engine";
 
 export class GameObject extends QObject {
     public parent: GameObject = null;
@@ -117,12 +117,21 @@ export class GameObject extends QObject {
             throw new Error(`Can not add another SpriteRenderer to ${this._objectName}.`);
         }
 
+        if (T === Rigidbody2d && this._componentList.find(component => component instanceof Rigidbody2d)) {
+            throw new Error(`Can not add another Rigidbody to ${this._objectName}.`);
+        }
+
         let component = new T(this);
         this._componentList.push(component);
 
         if (component instanceof BoxCollider) {
             Canvas.addCollider(component);
         }
+
+        if (component instanceof Rigidbody2d) {
+            Physics2d.addRigidbody(component);
+        }
+        
         return component
     }
 } 

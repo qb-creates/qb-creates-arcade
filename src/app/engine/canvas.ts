@@ -12,6 +12,7 @@ import { Sprite } from "./sprite";
 import { ButtonUI } from "./ui/button-ui";
 import { ButtonInterface, LabelInterface } from "./component-interface";
 import { LabelUI } from "./ui/label-ui";
+import { Rigidbody2d } from "./rigidbody2d";
 
 export abstract class Canvas {
     public static canvasUpdate: Subject<boolean> = new Subject<boolean>();
@@ -138,15 +139,16 @@ export abstract class Canvas {
     }
 
     private static updateCanvas = (timestamp: number) => {
+        Canvas.deltaTime = (timestamp - Canvas._previousTimestamp);
         Canvas._context.clearRect(-Canvas._canvas.width / 2, -Canvas._canvas.height / 2, Canvas._canvas.width, Canvas._canvas.height);
         Canvas.renderSprites();
         Canvas.renderUI();
         Canvas.drawGrid();
         Canvas.renderFPS();
-        Canvas.deltaTime = (timestamp - Canvas._previousTimestamp);
+        Canvas.MoveRigidBodies();
+        Canvas.collisionCheck();
         Canvas._previousTimestamp = timestamp;
         Canvas.canvasUpdate.next();
-        Canvas.collisionCheck();
         PlayerInput.clearKeyStatus();
         requestAnimationFrame(Canvas.updateCanvas);
     }
@@ -246,6 +248,15 @@ export abstract class Canvas {
         let x = (20 * Canvas.ppu);
         let y = (-1 * 13 * Canvas.ppu);
         Canvas.context.fillText(`${Math.round(1000 / Canvas.deltaTime)} fps`, x, y);
+    }
+
+    private static MoveRigidBodies() {
+        Canvas._gameObjectList.forEach((gameObject) => {
+            let rigidbody = gameObject.getComponent(Rigidbody2d);
+            if (rigidbody != null) {
+                rigidbody.applyPhysics();
+            }
+        });
     }
 
     private static ShowDebugTools() {
@@ -361,7 +372,7 @@ export abstract class Canvas {
     }
 
     // Acts as a private static constructor 
-    private static __ctor = (() => {
+    protected static __ctor = (() => {
         Canvas._canvas = <HTMLCanvasElement>document.getElementById('canvas');
         Canvas._context = Canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
 
