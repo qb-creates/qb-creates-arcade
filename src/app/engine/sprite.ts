@@ -1,5 +1,3 @@
-import { SpriteRenderer } from "./sprite-renderer";
-
 export class Sprite {
     image: HTMLImageElement = null;
 

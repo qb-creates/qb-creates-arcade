@@ -1,12 +1,13 @@
 import { Sprite } from "./sprite"
 import { SpriteShape } from "./sprite-shape"
+import { SpriteSheet } from "./sprite-sheet"
 import { Vector2 } from "./vector2"
 
 export interface ComponentInterface {}
 
 export interface SpriteRendererInterface extends ComponentInterface{
     color: string,
-    sprite: SpriteShape | Sprite
+    sprite: SpriteShape | Sprite | SpriteSheet
 }
 
 export interface BoxColliderInterface extends ComponentInterface{

@@ -10,6 +10,8 @@ import { ButtonInterface, BoxColliderInterface, SpriteRendererInterface, LabelIn
 import { TestFollow } from "./test-follow";
 import { LabelUI } from "src/app/engine/ui/label-ui";
 import { AppleBehaviour } from "./apple/apple-behaviour";
+import { Sprite } from "src/app/engine/sprite";
+import { SpriteSheet } from "src/app/engine/sprite-sheet";
 
 export let apple: Prefab = {
     children: [],
@@ -90,20 +92,20 @@ export let enemy: Prefab = {
     layer: 2,
     objectName: "enemy",
     position: new Vector2(-5, 5),
-    scale: new Vector2(1, 1),
+    scale: new Vector2(1.5, 1.5),
     components: [
         {
             component: SpriteRenderer,
             properties: <SpriteRendererInterface>{
                 color: 'red',
-                sprite: squareSprite,
+                sprite: new SpriteSheet('Fishman-Fighter-Sheet', 48, 48)
             }
         },
         {
             component: BoxCollider,
             properties: <BoxColliderInterface>{
                 position: new Vector2(-5, 5),
-                scale: new Vector2(1, 1),
+                scale: new Vector2(2, 3),
             }
         },
         {

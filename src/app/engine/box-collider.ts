@@ -3,8 +3,9 @@ import { ComponentObject } from "./q-object";
 import { Canvas, Component, GameObject, Vector2 } from "./qbcreates-js-engine";
 
 export class BoxCollider extends Component {
-    public position: Vector2 = new Vector2(0, 0);
     public scale: Vector2 = new Vector2(1, 1);
+    private _position: Vector2 = new Vector2(0, 0);
+    private _offset: Vector2 = new Vector2(0, 0);
     private _render = null;
     private _collisionList: Map<Guid, BoxCollider> = new Map();
     private _previousListCount: number = 0;
@@ -17,12 +18,30 @@ export class BoxCollider extends Component {
         return new Map(this._collisionList);
     }
 
+    set position(value: Vector2) {
+        this._position = Vector2.add(value, Vector2.zero);
+    }
+
+    get position() {
+        return this._position;
+    }
+
+    set offset(value: Vector2) {
+        this._position = Vector2.subtract(this._position, this._offset);
+        this._offset = value;
+        this._position = Vector2.add(this._position, this._offset);
+    }
+
+    get offset() {
+        return this._offset;
+    }
+    
     constructor(gameObject: GameObject) {
         super(gameObject)
-        this.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
+        this._position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
         this.scale = new Vector2(gameObject.transform.scale.x, gameObject.transform.scale.y);
         this._render = () => {
-            this.onRender(this.position.x, this.position.y, this.scale);
+            this.onRender(this._position.x, this._position.y, this.scale);
         };
     }
 
@@ -35,12 +54,12 @@ export class BoxCollider extends Component {
         this._previousListCount = this._collisionList.size;
 
         // Get the top left corner coordinates of the box
-        let l1 = new Vector2((this.position.x - .5) - (this.scale.x / 2), (this.position.y - .5) + (this.scale.y / 2));
-        let r1 = new Vector2((this.position.x - .5) + (this.scale.x / 2), (this.position.y - .5) - (this.scale.y / 2));
+        let l1 = new Vector2((this._position.x - .5) - (this.scale.x / 2), (this._position.y - .5) + (this.scale.y / 2));
+        let r1 = new Vector2((this._position.x - .5) + (this.scale.x / 2), (this._position.y - .5) - (this.scale.y / 2));
 
         // Get the bottom right coordinates of the box
-        let l2 = new Vector2((collider.position.x - .5) - (collider.scale.x / 2), (collider.position.y - .5) + (collider.scale.y / 2));
-        let r2 = new Vector2((collider.position.x - .5) + (collider.scale.x / 2), (collider.position.y - .5) - (collider.scale.y / 2));
+        let l2 = new Vector2((collider._position.x - .5) - (collider.scale.x / 2), (collider._position.y - .5) + (collider.scale.y / 2));
+        let r2 = new Vector2((collider._position.x - .5) + (collider.scale.x / 2), (collider._position.y - .5) - (collider.scale.y / 2));
 
         // if rectangle has area 0, no overlap
         if ((l1.x == r1.x || l1.y == r1.y || r2.x == l2.x || l2.y == r2.y)) {

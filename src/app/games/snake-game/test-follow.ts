@@ -1,97 +1,192 @@
-import { MonoBehaviour, Canvas, Time, PlayerInput, KeyCode, Vector2, SpriteRenderer, Rigidbody2d } from "../../engine/qbcreates-js-engine";
+import { MonoBehaviour, Canvas, Time, PlayerInput, KeyCode, Vector2, SpriteRenderer, Rigidbody2d, BoxCollider } from "../../engine/qbcreates-js-engine";
 import { GameStateManager } from "./managers/game-state-manager.js";
 import { Physics2d } from "../../engine/physics2d";
 import { squareSprite } from "src/app/engine/sprite-shape";
 import { Debug } from "src/app/engine/debug";
+import { SpriteSheet } from "src/app/engine/sprite-sheet";
 
 export class TestFollow extends MonoBehaviour {
     target = null;
     _play = false;
-    animation = [];
     animationcount = 0;
-    test = false
     jump:boolean = false;
     direction: number = 0;
     isGrounded: boolean = true;
     jumpTimer = 0;
+    isFlipped = false;
+    rigidbody2d: Rigidbody2d = null;
+    spriteSheet: SpriteSheet = null;
+    animation = null;
+    frameCount: number = 0;
+    spriteIndex = 0;
+ 
+    idleAnimation = [
+        {
+            x: 0,
+            y: 0,
+            frame: 0
+        },
+        {
+            x: 1,
+            y: 0,
+            frame: 6
+        },
+        {
+            x: 2,
+            y: 0,
+            frame: 12
+        },
+        {
+            x: 3,
+            y: 0,
+            frame: 18
+        },
+        {
+            x: 4,
+            y: 0,
+            frame: 24
+        },
+        {
+            x: 5,
+            y: 0,
+            frame: 30
+        },
+        {
+            x: 5,
+            y: 0,
+            frame: 35
+        }
+    ]
+
+    runAnimation = [
+        {
+            x: 0,
+            y: 1,
+            frame: 0
+        },
+        {
+            x: 1,
+            y: 1,
+            frame: 6
+        },
+        {
+            x: 2,
+            y: 1,
+            frame: 12
+        },
+        {
+            x: 3,
+            y: 1,
+            frame: 18
+        },
+        {
+            x: 4,
+            y: 1,
+            frame: 24
+        },
+        {
+            x: 5,
+            y: 1,
+            frame: 30
+        },
+        {
+            x: 5,
+            y: 1,
+            frame: 35
+        }
+    ]
+
+    jumpAccendAnimation = [
+        {
+            x: 0,
+            y: 2,
+            frame: 0
+        },
+        {
+            x: 1,
+            y: 2,
+            frame: 6
+        },
+        {
+            x: 2,
+            y: 2,
+            frame: 12
+        },
+        {
+            x: 3,
+            y: 2,
+            frame: 18
+        },
+        {
+            x: 3,
+            y: 2,
+            frame: 24
+        }
+    ]
+    
     awake() {
         GameStateManager.gameStateEvent.subscribe(isStarted => {
             this._play = true;
         });
-
-        this.animation.push((renderer) => {
-            squareSprite.drawShape(renderer)
-        });
-        this.animation.push((renderer) => {
-            squareSprite.drawShape(renderer)
-        });
-        this.animation.push((renderer) => {
-            squareSprite.drawShape(renderer)
-        });
-        this.animation.push((renderer) => {
-            squareSprite.drawShape(renderer)
-        });
-        this.animation.push((renderer) => {
-            squareSprite.drawShape(renderer)
-        });
+        this.spriteSheet = this.gameObject.getComponent(SpriteRenderer).sprite;
+        this.rigidbody2d = this.gameObject.getComponent(Rigidbody2d);
+        this.animation = this.idleAnimation;
     }
 
     start() {
+        setInterval(() => {
+            let lastFrameIndex = this.animation.length - 1;
+            let spriteModifierX = this.isFlipped ? this.animation[lastFrameIndex].x : 0;
+            let spriteModifierY = this.isFlipped ? 10 : 0;
 
+            if (this.animation != null) {
+                
+                if (this.animation[this.spriteIndex].frame == this.frameCount) {
+                    this.spriteSheet.sY = this.animation[this.spriteIndex].y + spriteModifierY;
+                    this.spriteSheet.sX = Math.abs(spriteModifierX - this.animation[this.spriteIndex].x);
+                    this.spriteIndex++;
+                }
+    
+                this.frameCount++;
+                
+                if (this.frameCount >= this.animation[lastFrameIndex].frame + 1) {
+                    this.spriteIndex = 0;
+                    this.frameCount = 0;
+                }
+            }
+        }, 16.6666667);
     }
     
     update() {
-        // console.log(Time.time);
-        if (PlayerInput.getKey(KeyCode[0])) {
-            if (!this.test && Math.abs(Canvas.mousePosition.x - this.transform.position.x) <= 0.2 && Math.abs(Canvas.mousePosition.y - this.transform.position.y) <= 0.2) {
-                this.test = true;
-            }
-            if (this.test) {
-                let direction = Vector2.subtract(Canvas.mousePosition, this.transform.position);
-                let colliders = Physics2d.rayCast(this.transform.position, direction, direction.magnitude);
-                let hitting = false;
-                if (colliders.length > 0) {
-                    hitting = true;
-                }
-                Debug.drawRay(this.transform.position, direction, direction.magnitude, hitting ? "#00FF00" : "#FF0000")
-            }
+        let attachedCollider = this.gameObject.getComponent(BoxCollider);
+        let collide = Physics2d.rayCast(this.transform.position, Vector2.down, (attachedCollider.scale.y / 2) + .1 - attachedCollider.offset.y);
+        
+        if (this.rigidbody2d.velocityX.x < 0) {
+            this.isFlipped = true;
+        } else if (this.rigidbody2d.velocityX.x > 0) {
+            this.isFlipped = false;
         }
-        if (PlayerInput.getKeyUp(KeyCode[0])) {
-            this.test = false;
-        }
-        let collide = Physics2d.rayCast(this.transform.position, Vector2.down, .6);
 
         if (collide.length == 0) {
             this.isGrounded = false;
         } else {
             this.isGrounded = true;
         }
-        // if (this.animationcount == 0) {
-        //     this.gameObject.transform.scale = new Vector2(.8, .8);
-        // }
-        // if (this.animationcount == 5) {
-        //     this.gameObject.transform.scale = new Vector2(.6, .6);
-        // }
-        // if (this.animationcount == 10) {
-        //     this.gameObject.transform.scale = new Vector2(.4, .4);
-        // }
-        // if (this.animationcount == 15) {
-        //     this.gameObject.transform.scale = new Vector2(.3, .3);
-        // }
-        // if (this.animationcount == 20) {
-        //     this.gameObject.transform.scale = new Vector2(.3, .3);
-        // }
-        // if (this.animationcount == 30) {
-        //     this.gameObject.transform.scale = new Vector2(.4, .4);
-        // }
-        // if (this.animationcount == 40) {
-        //     this.gameObject.transform.scale = new Vector2(.6, .6);
-        // }
-        // if (this.animationcount == 50) {
-        //     this.gameObject.transform.scale = new Vector2(.8, .8);
-        //     this.animationcount = 0;
-        // }
 
+        if (this.direction == 0 && this.isGrounded){
+            this.setAnimation(this.idleAnimation);
+        } else if (this.isGrounded){
+            this.setAnimation(this.runAnimation);
+        }
+
+        if (!this.isGrounded) {
+            if (this.rigidbody2d.velocityY.y > 0) {
+                this.setAnimation(this.jumpAccendAnimation);
+            } else if (this.rigidbody2d.velocityY.y < -10) {
+
+            }
+        }
+     
         if (PlayerInput.getKeyDown(KeyCode.Space)) {
             this.jump = true;
             this.jumpTimer = Time.time + .1;
@@ -106,27 +201,33 @@ export class TestFollow extends MonoBehaviour {
         if (!PlayerInput.getKey(KeyCode.KeyA) && !PlayerInput.getKey(KeyCode.KeyD)) {
             this.direction = 0;
         }
-        this.animationcount++;
     }
-    prevY = 0;
+
     fixedUpdate(): void {
-        let rb = this.gameObject.getComponent(Rigidbody2d);
         
-        rb.addForce(new Vector2(50 * this.direction, 0));
+        this.rigidbody2d.addForce(new Vector2(50 * this.direction, 0));
         
         if (this.jumpTimer > Time.time && this.isGrounded) {
             this.jumpTimer = 0;
-            rb.addForce(new Vector2(0, 10));
+            this.rigidbody2d.addForce(new Vector2(0, 11));
+           
         }
         
-        if (Math.abs(rb.velocityX.x) > 9) {
-            rb.velocityX.x = Math.sign(rb.velocityX.x) * 9;
+        if (Math.abs(this.rigidbody2d.velocityX.x) > 15) {
+            this.rigidbody2d.velocityX.x = Math.sign(this.rigidbody2d.velocityX.x) * 15;
         }
         
         if (this.direction == 0) {
-            rb.velocityX.x = Math.sign(rb.velocityX.x) * 0;
+            this.rigidbody2d.velocityX.x = Math.sign(this.rigidbody2d.velocityX.x) * 0;
         }
-        this.prevY = rb.velocityY.y;
+    }
+
+    setAnimation(animation) {
+        if (this.animation != animation) {
+            this.spriteIndex = 0;
+            this.frameCount = 0;
+            this.animation = animation;
+        }
     }
 
     onTriggerEnter(colliders) {
@@ -136,6 +237,27 @@ export class TestFollow extends MonoBehaviour {
     onTriggerExit(colliders) {
     }
 }
+class Animator { 
+    constructor() {
+
+    }
+}
+
+        // if (PlayerInput.getKey(KeyCode[0])) {
+        //     if (!this.test && Math.abs(Canvas.mousePosition.x - this.transform.position.x) <= 0.2 && Math.abs(Canvas.mousePosition.y - this.transform.position.y) <= 0.2) {
+        //         this.test = true;
+        //     }
+        //     if (this.test) {
+        //         let direction = Vector2.subtract(Canvas.mousePosition, this.transform.position);
+        //         let colliders = Physics2d.rayCast(this.transform.position, direction, direction.magnitude);
+        //         let hitting = false;
+        //         if (colliders.length > 0) {
+        //             hitting = true;
+        //         }
+        //         // Debug.drawRay(this.transform.position, direction, direction.magnitude, hitting ? "#00FF00" : "#FF0000")
+        //     }
+        // }
+
 
 // if (true) {
 //     // if (PlayerInput.getKey(KeyCode.a)) {

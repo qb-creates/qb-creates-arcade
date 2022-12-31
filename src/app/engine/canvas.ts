@@ -13,6 +13,7 @@ import { ButtonUI } from "./ui/button-ui";
 import { ButtonInterface, LabelInterface } from "./component-interface";
 import { LabelUI } from "./ui/label-ui";
 import { Rigidbody2d } from "./rigidbody2d";
+import { SpriteSheet } from "./sprite-sheet";
 
 export abstract class Canvas {
     public static canvasUpdate: Subject<boolean> = new Subject<boolean>();
@@ -182,9 +183,26 @@ export abstract class Canvas {
             let renderer: SpriteRenderer = gameObject.getComponent(SpriteRenderer);
 
             if (renderer) {
-                if (renderer.sprite instanceof Sprite) {
-                    let w = Canvas.ppu * gameObject.transform.scale.x;
-                    let h = Canvas.ppu * gameObject.transform.scale.y;
+                if (renderer.sprite instanceof SpriteSheet) {
+                    let sW = renderer.sprite.sW;
+                    let sH = renderer.sprite.sH;
+                    let sX = renderer.sprite.sX * sW + 1;
+                    let sY = renderer.sprite.sY * sH + 1;
+
+                    let w = Canvas.ppu * gameObject.transform.scale.x * 3;
+                    let h = Canvas.ppu * gameObject.transform.scale.y * 3;
+
+                    let x = Canvas.ppu * (gameObject.transform.position.x - 0.5);
+                    let y = -Canvas.ppu * (gameObject.transform.position.y + 0.5);
+
+                    x = x + (Canvas.ppu - w) / 2;
+                    y = y + (Canvas.ppu - h) / 2;
+                    Canvas.context.globalAlpha = renderer.transparency;
+                    Canvas._context.drawImage(renderer.sprite.image, sX, sY, sW, sH, x, y, w, h)
+                }
+                else if (renderer.sprite instanceof Sprite) {
+                    let w = Canvas.ppu * gameObject.transform.scale.x * 3;
+                    let h = Canvas.ppu * gameObject.transform.scale.y * 3;
 
                     let x = Canvas.ppu * (gameObject.transform.position.x - 0.5);
                     let y = -Canvas.ppu * (gameObject.transform.position.y + 0.5);
