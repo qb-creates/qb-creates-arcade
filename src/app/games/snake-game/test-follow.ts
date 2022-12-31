@@ -19,7 +19,7 @@ export class TestFollow extends MonoBehaviour {
     animation = null;
     frameCount: number = 0;
     spriteIndex = 0;
- 
+    previousVelocityY = 0;
     idleAnimation = [
         {
             x: 0,
@@ -123,6 +123,42 @@ export class TestFollow extends MonoBehaviour {
             frame: 24
         }
     ]
+
+    jumpPeakAnimation = [
+        {
+            x: 0,
+            y: 10,
+            frame: 0
+        }
+    ]
+    
+    jumpDecendAnimation = [
+        {
+            x: 0,
+            y: 3,
+            frame: 0
+        },
+        {
+            x: 1,
+            y: 3,
+            frame: 6
+        },
+        {
+            x: 2,
+            y: 3,
+            frame: 12
+        },
+        {
+            x: 3,
+            y: 3,
+            frame: 18
+        },
+        {
+            x: 3,
+            y: 3,
+            frame: 24
+        }
+    ]
     
     awake() {
         GameStateManager.gameStateEvent.subscribe(isStarted => {
@@ -137,7 +173,7 @@ export class TestFollow extends MonoBehaviour {
         setInterval(() => {
             let lastFrameIndex = this.animation.length - 1;
             let spriteModifierX = this.isFlipped ? this.animation[lastFrameIndex].x : 0;
-            let spriteModifierY = this.isFlipped ? 10 : 0;
+            let spriteModifierY = this.isFlipped ? 11 : 0;
 
             if (this.animation != null) {
                 
@@ -175,16 +211,18 @@ export class TestFollow extends MonoBehaviour {
 
         if (this.direction == 0 && this.isGrounded){
             this.setAnimation(this.idleAnimation);
-        } else if (this.isGrounded){
+        } else if (this.direction != 0 && this.isGrounded){
             this.setAnimation(this.runAnimation);
         }
 
         if (!this.isGrounded) {
             if (this.rigidbody2d.velocityY.y > 0) {
                 this.setAnimation(this.jumpAccendAnimation);
-            } else if (this.rigidbody2d.velocityY.y < -10) {
-
-            }
+            } else if (this.rigidbody2d.velocityY.y < -14) {
+                this.setAnimation(this.jumpDecendAnimation);         
+            } else if (this.rigidbody2d.velocityY.y < -2) {
+                this.setAnimation(this.jumpPeakAnimation);         
+            } 
         }
      
         if (PlayerInput.getKeyDown(KeyCode.Space)) {
@@ -201,6 +239,8 @@ export class TestFollow extends MonoBehaviour {
         if (!PlayerInput.getKey(KeyCode.KeyA) && !PlayerInput.getKey(KeyCode.KeyD)) {
             this.direction = 0;
         }
+
+        this.previousVelocityY = this.rigidbody2d.velocityY.y;
     }
 
     fixedUpdate(): void {
@@ -209,7 +249,7 @@ export class TestFollow extends MonoBehaviour {
         
         if (this.jumpTimer > Time.time && this.isGrounded) {
             this.jumpTimer = 0;
-            this.rigidbody2d.addForce(new Vector2(0, 11));
+            this.rigidbody2d.addForce(new Vector2(0, 10.5));
            
         }
         
