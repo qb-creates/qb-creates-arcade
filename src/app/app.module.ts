@@ -5,11 +5,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SnakeGameComponent } from './games/snake-game/snake-game.component';
 import { FormsModule } from '@angular/forms';
+import { FishmanFighterComponent } from './games/fishman-fighter/fishman-fighter.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SnakeGameComponent
+    SnakeGameComponent,
+    FishmanFighterComponent
   ],
   imports: [
     BrowserModule,

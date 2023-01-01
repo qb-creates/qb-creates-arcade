@@ -35,6 +35,11 @@ export class PlayerInput {
             keyDown: false,
             keyUp: false
         },
+        KeyE: {
+            key: false,
+            keyDown: false,
+            keyUp: false
+        },
         KeyQ: {
             key: false,
             keyDown: false,

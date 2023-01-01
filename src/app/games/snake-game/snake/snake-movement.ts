@@ -8,7 +8,7 @@ export class SnakeMovement extends MonoBehaviour {
     private _verticalAxis: number = 0;
     private _horizontalAxis: number = 1;
     private _movePlayerTimer: number = 0;
-    private _currentDirection: Vector2 = new Vector2(0, 1);
+    private _currentDirection: Vector2 = new Vector2(1, 0);
 
     get currentDirection() {
         return this._currentDirection;

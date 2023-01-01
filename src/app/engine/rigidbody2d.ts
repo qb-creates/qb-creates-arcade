@@ -82,7 +82,7 @@ export class Rigidbody2d extends Component {
             // this.normalForceY = Vector2.zero;
             // this.transform.position = Vector2.add(this.transform.position, Vector2.multiply(directionY, stepY));
         }
-        console.log(this.velocityY, this.totalForceY)
+        // console.log(this.velocityY, this.totalForceY)
         this.prevVelocityY = this.velocityY;
         //////X Values
         let prevPosX = new Vector2(this.transform.position.x, 0);

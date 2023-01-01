@@ -1,82 +1,40 @@
-import { BoxCollider, SpriteRenderer, Vector2 } from "../../engine/qbcreates-js-engine";
+import { BoxCollider, Rigidbody2d, SpriteRenderer, Vector2 } from "../../engine/qbcreates-js-engine";
 import { Prefab } from "src/app/engine/q-object";
-import { squareSprite } from "src/app/engine/sprite-shape";
-import { ButtonUI } from "src/app/engine/ui/button-ui";
-import { PlayButton } from "./ui/play-button";
 import { ButtonInterface, BoxColliderInterface, SpriteRendererInterface, LabelInterface } from "src/app/engine/component-interface";
+import { FishmanInput } from "./fishman/fishman-input";
 import { LabelUI } from "src/app/engine/ui/label-ui";
-import { AppleBehaviour } from "./apple/apple-behaviour";
+import { Sprite } from "src/app/engine/sprite";
+import { SpriteSheet } from "src/app/engine/sprite-sheet";
+import { squareSprite } from "src/app/engine/sprite-shape";
 
-export let apple: Prefab = {
+export let player: Prefab = {
     children: [],
-    layer: 1,
-    objectName: "apple",
-    position: new Vector2(5, 5),
-    scale: new Vector2(.4, .4),
+    layer: 2,
+    objectName: "player",
+    position: new Vector2(-5, 5),
+    scale: new Vector2(1.5, 1.5),
     components: [
         {
             component: SpriteRenderer,
             properties: <SpriteRendererInterface>{
                 color: 'red',
-                sprite: squareSprite,
+                sprite: new SpriteSheet('Fishman-Fighter-Sheet', 48, 48)
             }
         },
         {
             component: BoxCollider,
             properties: <BoxColliderInterface>{
-                position: new Vector2(5, 5),
-                scale: new Vector2(.4, .4),
+                position: new Vector2(-5, 5),
+                scale: new Vector2(2, 3),
             }
         },
         {
-            component: AppleBehaviour,
+            component: FishmanInput,
             properties: {}
-        }
-    ]
-}
-
-export let playButton: Prefab = {
-    children: [],
-    layer: 0,
-    objectName: "playButton",
-    position: new Vector2(0, 8),
-    scale: new Vector2(3.8, 2),
-    components: [
-        {
-            component: PlayButton,
-            properties: {
-            }
         },
         {
-            component: ButtonUI,
-            properties: <ButtonInterface>{
-                text: 'Play',
-                font: 'Monospace',
-                textSize: 30,
-                textColor: 'white',
-                buttonColor: 'red',
-                bold: true
-            }
-        }
-    ]
-}
-
-export let scoreLabel: Prefab = {
-    children: [],
-    layer: 0,
-    objectName: 'Score Label',
-    position: new Vector2(0, 12.5),
-    scale: new Vector2(1, 1),
-    components: [
-        {
-            component: LabelUI,
-            properties: <LabelInterface>{
-                text: 'Score\n0',
-                font: 'Monospace',
-                textSize: 40,
-                textColor: 'white',
-                bold: true
-            }
+            component: Rigidbody2d,
+            properties: {}
         }
     ]
 }
@@ -140,7 +98,7 @@ export let horizontalBorder: Prefab = {
             component: BoxCollider,
             properties: <BoxColliderInterface>{
                 position: new Vector2(0, 0),
-                scale: new Vector2(19, .3),
+                scale: new Vector2(20.5, .3),
             }
         }
     ]
